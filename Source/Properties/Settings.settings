@@ -1,0 +1,90 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="RunSimioPortalExpConsole.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://servicestest1.internal.simioportal.com/</Value>
+    </Setting>
+    <Setting Name="PersonalAccessToken" Type="System.String" Scope="User">
+      <Value Profile="(Default)">eyJ1IjoiZ3dpcnRoQHNpbWlvLmNvbSIsInQiOiJFSHlxNml2ZXZOOVJ0QUcwYnE0RytuLzZ6d1JYZkc1MDZFa2htaUR1ZkJUV0IwbnI0cE5DdHovaDErRTVnNjgwQjFmMzJKY25aUmw3VTh5ak9tdndzQT09In0=</Value>
+    </Setting>
+    <Setting Name="RetryResultsIntervalSeconds" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="RetryResultsMaxAttempts" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">500</Value>
+    </Setting>
+    <Setting Name="AuthenticationType" Type="System.String" Scope="User">
+      <Value Profile="(Default)">None</Value>
+    </Setting>
+    <Setting Name="Domain" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="UserName" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Password" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ProjectName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SDDP</Value>
+    </Setting>
+    <Setting Name="RunSchedulePlanScenarioName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SchedRun</Value>
+    </Setting>
+    <Setting Name="RunScheduleControlValuesArray" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RunSchedule" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="RunScheduleRiskAnalysis" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="PublishSchduleRun" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="PublishScheduleName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SchedRunPub</Value>
+    </Setting>
+    <Setting Name="PublishScheduleDescription" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SchedRunPubDesc</Value>
+    </Setting>
+    <Setting Name="RunExperimentRunDesc" Type="System.String" Scope="User">
+      <Value Profile="(Default)">OptquestRun</Value>
+    </Setting>
+    <Setting Name="RunExperimentScenariosJSON" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{ "Scenarios": [{ "Name": "Scenario1", "ReplicationsRequired": 10, "ControlValues": [{ "Name": "ToolQty", "Value": 3}]}]}</Value>
+    </Setting>
+    <Setting Name="AddInParametersValues" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{"ExperimentAddInId":"8a14cfc5-581c-46db-b63e-31bdaa98dcb0","AddInName":"OptQuest for Simio","AddInParameters":[{"Name":"Min Replications","Value": 6},{"Name":"Max Replications","Value": 20},{"Name":"Max Scenarios","Value": 300},{"Name":"Confidence Level","Value":"95%"},{"Name":"Relative Error","Value": 0.1},{"Name":"Objective Type","Value":"Single Objective"}],"ControlsAddInParameters":[{"ControlName":"ToolQty","ControlParameters":[{"Name":"Include in Optimization","Value":"Yes"},{"Name":"Minimum Value","Value": 1},{"Name":"Maximum Value","Value": 5},{"Name":"Increment","Value": 1}]}],"ResponsesAddInParameters":[{"ResponseName":"AverageLateness","ResponseParameters":[{"Name":"Weight","Value": 1}]}]}</Value>
+    </Setting>
+    <Setting Name="RunExperiment" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="PublishExperimentRun" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="PublishExperimentRunName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ExpPub</Value>
+    </Setting>
+    <Setting Name="PublishExperimetnRunDescription" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ExpPubDesc</Value>
+    </Setting>
+    <Setting Name="WaitAtEnd" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="RunLengthDays" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">14</Value>
+    </Setting>
+    <Setting Name="ImportAllTables" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ExportAllTablesAndLogs" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="StartTimeSelection" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Minute</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

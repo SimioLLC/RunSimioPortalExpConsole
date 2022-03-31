@@ -1,0 +1,8 @@
+C:\Users\GlenWirth\Simio LLC\Services - Colgate Mission Hills\RunSimioPortalExpConsole\RunSimioPortalExpConsole.exe.config
+C:\Users\GlenWirth\Simio LLC\Services - Colgate Mission Hills\RunSimioPortalExpConsole\RunSimioPortalExpConsole.exe
+C:\Users\GlenWirth\Simio LLC\Services - Colgate Mission Hills\RunSimioPortalExpConsole\RunSimioPortalExpConsole.pdb
+C:\Users\GlenWirth\Simio LLC\Services - Colgate Mission Hills\RunSimioPortalExpConsoleCode\obj\Debug\RunSimioPortalExpConsole.csprojAssemblyReference.cache
+C:\Users\GlenWirth\Simio LLC\Services - Colgate Mission Hills\RunSimioPortalExpConsoleCode\obj\Debug\RunSimioPortalExpConsole.csproj.CoreCompileInputs.cache
+C:\Users\GlenWirth\Simio LLC\Services - Colgate Mission Hills\RunSimioPortalExpConsoleCode\obj\Debug\RunSimioPortalExpConsole.csproj.CopyComplete
+C:\Users\GlenWirth\Simio LLC\Services - Colgate Mission Hills\RunSimioPortalExpConsoleCode\obj\Debug\RunSimioPortalExpConsole.exe
+C:\Users\GlenWirth\Simio LLC\Services - Colgate Mission Hills\RunSimioPortalExpConsoleCode\obj\Debug\RunSimioPortalExpConsole.pdb
