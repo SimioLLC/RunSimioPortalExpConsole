@@ -6,3 +6,12 @@ C:\Users\GlenWirth\Simio LLC\Services - Colgate Mission Hills\RunSimioPortalExpC
 C:\Users\GlenWirth\Simio LLC\Services - Colgate Mission Hills\RunSimioPortalExpConsoleCode\obj\Debug\RunSimioPortalExpConsole.csproj.CopyComplete
 C:\Users\GlenWirth\Simio LLC\Services - Colgate Mission Hills\RunSimioPortalExpConsoleCode\obj\Debug\RunSimioPortalExpConsole.exe
 C:\Users\GlenWirth\Simio LLC\Services - Colgate Mission Hills\RunSimioPortalExpConsoleCode\obj\Debug\RunSimioPortalExpConsole.pdb
+d:\Github\RunSimioPortalExpConsole\RunSimioPortalExpConsole\RunSimioPortalExpConsole.exe.config
+d:\Github\RunSimioPortalExpConsole\RunSimioPortalExpConsole\RunSimioPortalExpConsole.exe
+d:\Github\RunSimioPortalExpConsole\RunSimioPortalExpConsole\RunSimioPortalExpConsole.pdb
+d:\Github\RunSimioPortalExpConsole\Source\obj\Debug\RunSimioPortalExpConsole.csproj.AssemblyReference.cache
+d:\Github\RunSimioPortalExpConsole\Source\obj\Debug\RunSimioPortalExpConsole.csproj.SuggestedBindingRedirects.cache
+d:\Github\RunSimioPortalExpConsole\Source\obj\Debug\RunSimioPortalExpConsole.csproj.CoreCompileInputs.cache
+d:\Github\RunSimioPortalExpConsole\Source\obj\Debug\RunSimioPortalExpConsole.csproj.CopyComplete
+d:\Github\RunSimioPortalExpConsole\Source\obj\Debug\RunSimioPortalExpConsole.exe
+d:\Github\RunSimioPortalExpConsole\Source\obj\Debug\RunSimioPortalExpConsole.pdb
