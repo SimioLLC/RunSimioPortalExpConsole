@@ -311,7 +311,7 @@ namespace RunSimioPortalExpConsole
                     }
 
                     Console.WriteLine("Start Experiment Run For Schedule");
-                    //SimioPortalWebAPIHelper.startExpimentRun(experimentRunId, experimentId, true);
+                    SimioPortalWebAPIHelper.startExpimentRun(experimentRunId, experimentId, true);
 
                     experimentRunId = SimioPortalWebAPIHelper.findExperimentResults(experimentId, true);
                     Console.WriteLine("ExperimentRunId:" + experimentRunId.ToString());
