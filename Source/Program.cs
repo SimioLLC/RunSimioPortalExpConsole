@@ -114,7 +114,7 @@ namespace RunSimioPortalExpConsole
                                 SimioPortalWebAPIHelper.RunSchedule = Convert.ToBoolean(args[arrayIdx + 1]);
                             }
                             break;
-                        case "-rra":
+                        case "-rra": 
                             if (arrayIdx < args.Length - 1)
                             {
                                 SimioPortalWebAPIHelper.RunScheduleRiskAnalysis = Convert.ToBoolean(args[arrayIdx + 1]);
