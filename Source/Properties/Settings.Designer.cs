@@ -360,5 +360,17 @@ namespace RunSimioPortalExpConsole.Properties {
                 this["StartTimeSelection"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        public int BearerTokenRefreshIntervalMinutes {
+            get {
+                return ((int)(this["BearerTokenRefreshIntervalMinutes"]));
+            }
+            set {
+                this["BearerTokenRefreshIntervalMinutes"] = value;
+            }
+        }
     }
 }

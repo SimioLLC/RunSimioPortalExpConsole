@@ -86,5 +86,8 @@
     <Setting Name="StartTimeSelection" Type="System.String" Scope="User">
       <Value Profile="(Default)">Minute</Value>
     </Setting>
+    <Setting Name="BearerTokenRefreshIntervalMinutes" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">15</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

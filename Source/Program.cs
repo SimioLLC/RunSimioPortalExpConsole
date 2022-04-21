@@ -198,6 +198,12 @@ namespace RunSimioPortalExpConsole
                                 SimioPortalWebAPIHelper.StartTimeSelection = args[arrayIdx + 1];
                             }
                             break;
+                        case "-btr":
+                            if (arrayIdx < args.Length - 1)
+                            {
+                                SimioPortalWebAPIHelper.StartTimeSelection = args[arrayIdx + 1];
+                            }
+                            break;
                         case "-?":
                             System.Console.WriteLine("-url = Portal url  (default = " + SimioPortalWebAPIHelper.Url + ")");
                             System.Console.WriteLine("-pat = Personal Access Token  (default = " + SimioPortalWebAPIHelper.PersonalAccessToken.ToString() + ")");
@@ -226,6 +232,7 @@ namespace RunSimioPortalExpConsole
                             System.Console.WriteLine("-iat = Import All Tables (Scheduling Only)  (default = " + SimioPortalWebAPIHelper.ImportAllTables.ToString() + ")");
                             System.Console.WriteLine("-eat = Export All Tables And Logs (Scheduling Only)  (default = " + SimioPortalWebAPIHelper.ExportAllTablesAndLogs.ToString() + ")");
                             System.Console.WriteLine("-sts = Start Time Selection (Scheduling Only)  (default = " + SimioPortalWebAPIHelper.StartTimeSelection + ")");
+                            System.Console.WriteLine("-btr = Bearer Token Refresh Interval Minutes (default = " + SimioPortalWebAPIHelper.BearerTokenRefreshIntervalMinutes.ToString() + ")");
                             System.Console.WriteLine("-w = wait (pause) at end  (default = " + SimioPortalWebAPIHelper.WaitAtEnd.ToString() + ")");
                             parametersQuestioned = true;
                             break;
@@ -261,7 +268,7 @@ namespace RunSimioPortalExpConsole
             }
 
             Console.WriteLine("Obtain Bearer Token");
-            SimioPortalWebAPIHelper.obtainBearerToken();
+            SimioPortalWebAPIHelper.checkAndObtainBearerToken();
 
             // for schedules
             if (SimioPortalWebAPIHelper.ImportAllTables || SimioPortalWebAPIHelper.RunSchedule || SimioPortalWebAPIHelper.ExportAllTablesAndLogs || SimioPortalWebAPIHelper.PublishScheduleRun)

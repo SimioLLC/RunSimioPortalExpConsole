@@ -16,7 +16,7 @@ namespace RunSimioPortalExpConsole
 {
     public static class SimioPortalWebAPIHelper
     {
-        internal static string Token;
+        internal static string Token = String.Empty;
         internal static ICredentials Credentials;
         internal static bool UseDefaultCredentials;
         internal static Uri Uri;
@@ -48,6 +48,8 @@ namespace RunSimioPortalExpConsole
         internal static bool ExportAllTablesAndLogs = Properties.Settings.Default.ExportAllTablesAndLogs;
         internal static Int32 RunLengthDays = Properties.Settings.Default.RunLengthDays;
         internal static string StartTimeSelection = Properties.Settings.Default.StartTimeSelection;
+        internal static Int32 BearerTokenRefreshIntervalMinutes = Properties.Settings.Default.BearerTokenRefreshIntervalMinutes;
+        internal static DateTime BearerTokenRetrievalTime = DateTime.MinValue;
 
         internal static void setCredentials()
         {
@@ -74,38 +76,43 @@ namespace RunSimioPortalExpConsole
             }
         }
 
-        internal static void obtainBearerToken()
+        internal static void checkAndObtainBearerToken()
         {
-            var client = new RestClient(Uri + "/api/RequestToken");
-            client.Timeout = -1;
-            var request = new RestRequest(Method.POST);
-            if (String.IsNullOrWhiteSpace(AuthenticationType) == false && AuthenticationType.ToLower() != "none")
+            if (Token.Length == 0 || BearerTokenRetrievalTime.AddMinutes(BearerTokenRefreshIntervalMinutes) <= DateTime.Now)
             {
-                if (UseDefaultCredentials)
+                var client = new RestClient(Uri + "/api/RequestToken");
+                client.Timeout = -1;
+                var request = new RestRequest(Method.POST);
+                if (String.IsNullOrWhiteSpace(AuthenticationType) == false && AuthenticationType.ToLower() != "none")
                 {
-                    request.UseDefaultCredentials = true;
+                    if (UseDefaultCredentials)
+                    {
+                        request.UseDefaultCredentials = true;
+                    }
+                    else
+                    {
+                        client.Authenticator = new RestSharp.Authenticators.NtlmAuthenticator(Credentials);
+                    }
                 }
-                else
+                request.AddHeader("Content-Type", "application/json");
+                request.AddParameter("application/json", "{\n    \"PersonalAccessToken\": \"" + PersonalAccessToken + "\",\n    \"Purpose\": \"PublicAPI\"\n}", ParameterType.RequestBody);
+                IRestResponse response = client.Execute(request);
+                if (response.StatusCode != System.Net.HttpStatusCode.OK)
                 {
-                    client.Authenticator = new RestSharp.Authenticators.NtlmAuthenticator(Credentials);
+                    if (response.ErrorMessage != null) throw new Exception(response.ErrorMessage);
+                    else throw new Exception(response.Content);
                 }
+                var xmlDoc = responseToXML(response.Content);
+                XmlNodeList node = xmlDoc.GetElementsByTagName("Token");
+                Token = node[0].InnerText;
+                BearerTokenRetrievalTime = DateTime.Now;
+                Console.WriteLine("Bearer Token Received Successfully");
             }
-            request.AddHeader("Content-Type", "application/json");
-            request.AddParameter("application/json", "{\n    \"PersonalAccessToken\": \"" + PersonalAccessToken + "\",\n    \"Purpose\": \"PublicAPI\"\n}", ParameterType.RequestBody);
-            IRestResponse response = client.Execute(request);
-            if (response.StatusCode != System.Net.HttpStatusCode.OK)
-            {
-                if (response.ErrorMessage != null) throw new Exception(response.ErrorMessage);
-                else throw new Exception(response.Content);
-            }
-            var xmlDoc = responseToXML(response.Content);
-            XmlNodeList node = xmlDoc.GetElementsByTagName("Token");
-            Token = node[0].InnerText;
-            Console.WriteLine("Bearer Token Received Successfully");
         }
 
         internal static Int32[] findExperimentIds(bool forSchedules)
         {
+            checkAndObtainBearerToken();
             var client = new RestClient(Uri + "/api/Query");
             client.Timeout = -1;
             var request = new RestRequest(Method.POST);
@@ -159,6 +166,7 @@ namespace RunSimioPortalExpConsole
 
         internal static void exportAllExperimentRunScenarioTableAndLogData(Int32 existingExperimentRuntId)
         {
+            checkAndObtainBearerToken();
             var client = new RestClient(Uri + "/api/Command");
             client.Timeout = -1;
             var request = new RestRequest(Method.POST);
@@ -195,6 +203,7 @@ namespace RunSimioPortalExpConsole
 
         internal static void importAllExperimentRunScenarioTableData(Int32 existingExperimentRuntId, string correlationId)
         {
+            checkAndObtainBearerToken();
             var client = new RestClient(Uri + "/api/Command");
             client.Timeout = -1;
             var request = new RestRequest(Method.POST);
@@ -231,6 +240,7 @@ namespace RunSimioPortalExpConsole
 
         internal static void setExperimentRunScenarioControlValue(Int32 existingExperimentRuntId, string controlName, string controlValue)
         {
+            checkAndObtainBearerToken();
             var client = new RestClient(Uri + "/api/Command");
             client.Timeout = -1;
             var request = new RestRequest(Method.POST);
@@ -267,6 +277,7 @@ namespace RunSimioPortalExpConsole
 
         internal static void setExperimentRunScenarioStartTimeSelectionRunLengthDays(Int32 existingExperimentRuntId)
         {
+            checkAndObtainBearerToken();
             var client = new RestClient(Uri + "/api/Command");
             client.Timeout = -1;
             var request = new RestRequest(Method.POST);
@@ -304,6 +315,7 @@ namespace RunSimioPortalExpConsole
 
         internal static void startExpimentRun(Int32 existingExperimentRuntId, Int32 experimentId, bool forSchedules)
         {
+            checkAndObtainBearerToken();
             var client = new RestClient(Uri + "/api/Command");
             client.Timeout = -1;
             var request = new RestRequest(Method.POST);
@@ -343,48 +355,36 @@ namespace RunSimioPortalExpConsole
 
         internal static Int32 getExperimentRunScenarioTableImports(Int32 experimentRunId, string correlationId)
         {
-            var client = new RestClient(Uri + "/api/Query");
-            client.Timeout = -1;
-            var request = new RestRequest(Method.POST);
-            request.AddHeader("Content-Type", "multipart/form-data");
-            request.AddHeader("Authorization", "Bearer " + Token);
-            if (String.IsNullOrWhiteSpace(AuthenticationType) == false && AuthenticationType.ToLower() != "none")
-            {
-                if (UseDefaultCredentials)
-                {
-                    request.UseDefaultCredentials = true;
-                }
-                else
-                {
-                    client.Authenticator = new RestSharp.Authenticators.NtlmAuthenticator(Credentials);
-                }
-            }
-            request.AlwaysMultipartFormData = true;
-            request.AddParameter("Type", "GetExperimentRunScenarioTableImports");
-            request.AddParameter("Query", "{\"ExperimentRunId\": " + experimentRunId.ToString() + ", \"CorrelationId\": \"" + correlationId + "\"}");
-
             Int32 numberOfQueries = 1;
             do
-            {
+            { 
+                checkAndObtainBearerToken();
+                var client = new RestClient(Uri + "/api/Query");
+                client.Timeout = -1;
+                var request = new RestRequest(Method.POST);
+                request.AddHeader("Content-Type", "multipart/form-data");
+                request.AddHeader("Authorization", "Bearer " + Token);
+                if (String.IsNullOrWhiteSpace(AuthenticationType) == false && AuthenticationType.ToLower() != "none")
+                {
+                    if (UseDefaultCredentials)
+                    {
+                        request.UseDefaultCredentials = true;
+                    }
+                    else
+                    {
+                        client.Authenticator = new RestSharp.Authenticators.NtlmAuthenticator(Credentials);
+                    }
+                }
+                request.AlwaysMultipartFormData = true;
+                request.AddParameter("Type", "GetExperimentRunScenarioTableImports");
+                request.AddParameter("Query", "{\"ExperimentRunId\": " + experimentRunId.ToString() + ", \"CorrelationId\": \"" + correlationId + "\"}");
+
                 Console.WriteLine("Get Table Import Status Attempt Number = " + numberOfQueries.ToString());
                 IRestResponse response = client.Execute(request);
                 if (response.StatusCode != System.Net.HttpStatusCode.OK)
                 {
-                    if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                    {
-                        obtainBearerToken();
-                        request = new RestRequest(Method.POST);
-                        request.AddHeader("Content-Type", "multipart/form-data");
-                        request.AddHeader("Authorization", "Bearer " + Token);
-                        request.AlwaysMultipartFormData = true;
-                        request.AddParameter("Type", "GetExperimentRunScenarioTableImports");
-                        request.AddParameter("Query", "{\"ExperimentRunId\": " + experimentRunId.ToString() + ", \"CorrelationId\": \"" + correlationId + "\"}");
-                    }
-                    else
-                    {
-                        if (response.ErrorMessage != null) throw new Exception(response.ErrorMessage);
-                        else throw new Exception(response.Content);
-                    }
+                    if (response.ErrorMessage != null) throw new Exception(response.ErrorMessage);
+                    else throw new Exception(response.Content);
                 }
                 else
                 {
@@ -418,49 +418,37 @@ namespace RunSimioPortalExpConsole
 
         internal static Int32 findExperimentResults(Int32 experimentId, bool forSchedules)
         {
-            var client = new RestClient(Uri + "/api/Query");
-            client.Timeout = -1;
-            var request = new RestRequest(Method.POST);
-            request.AddHeader("Content-Type", "multipart/form-data");
-            request.AddHeader("Authorization", "Bearer " + Token);
-            if (String.IsNullOrWhiteSpace(AuthenticationType) == false && AuthenticationType.ToLower() != "none")
-            {
-                if (UseDefaultCredentials)
-                {
-                    request.UseDefaultCredentials = true;
-                }
-                else
-                {
-                    client.Authenticator = new RestSharp.Authenticators.NtlmAuthenticator(Credentials);
-                }
-            }
-            request.AlwaysMultipartFormData = true;
-            request.AddParameter("Type", "GetExperimentRuns");
-            request.AddParameter("Query", "{\"ExperimentId\": " + experimentId.ToString() + ",\"ReturnNonOwnedRuns\":false}");
-
             Int32 numberOfQueries = 1;
             Int32 experimentRunId = -1;
             do
             {
+                checkAndObtainBearerToken();
+                var client = new RestClient(Uri + "/api/Query");
+                client.Timeout = -1;
+                var request = new RestRequest(Method.POST);
+                request.AddHeader("Content-Type", "multipart/form-data");
+                request.AddHeader("Authorization", "Bearer " + Token);
+                if (String.IsNullOrWhiteSpace(AuthenticationType) == false && AuthenticationType.ToLower() != "none")
+                {
+                    if (UseDefaultCredentials)
+                    {
+                        request.UseDefaultCredentials = true;
+                    }
+                    else
+                    {
+                        client.Authenticator = new RestSharp.Authenticators.NtlmAuthenticator(Credentials);
+                    }
+                }
+                request.AlwaysMultipartFormData = true;
+                request.AddParameter("Type", "GetExperimentRuns");
+                request.AddParameter("Query", "{\"ExperimentId\": " + experimentId.ToString() + ",\"ReturnNonOwnedRuns\":false}");
+
                 Console.WriteLine("Get Experiment Results Attempt Number = " + numberOfQueries.ToString());
                 IRestResponse response = client.Execute(request);
                 if (response.StatusCode != System.Net.HttpStatusCode.OK)
                 {
-                    if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                    {
-                        obtainBearerToken();
-                        request = new RestRequest(Method.POST);
-                        request.AddHeader("Content-Type", "multipart/form-data");
-                        request.AddHeader("Authorization", "Bearer " + Token);
-                        request.AlwaysMultipartFormData = true;
-                        request.AddParameter("Type", "GetExperimentRuns");
-                        request.AddParameter("Query", "{\"ExperimentId\": " + experimentId.ToString() + ",\"ReturnNonOwnedRuns\":false}");
-                    }
-                    else
-                    {
-                        if (response.ErrorMessage != null) throw new Exception(response.ErrorMessage);
-                        else throw new Exception(response.Content);
-                    }
+                    if (response.ErrorMessage != null) throw new Exception(response.ErrorMessage);
+                    else throw new Exception(response.Content);
                 }
                 else
                 {
@@ -497,6 +485,7 @@ namespace RunSimioPortalExpConsole
 
         internal static void publishResults(Int32 experimenRuntId, bool forSchedules)
         {
+            checkAndObtainBearerToken();
             var client = new RestClient(Uri + "/api/Command");
             client.Timeout = -1;
             var request = new RestRequest(Method.POST);
