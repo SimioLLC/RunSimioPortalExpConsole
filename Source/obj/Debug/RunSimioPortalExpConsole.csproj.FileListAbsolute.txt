@@ -23,3 +23,6 @@ C:\VSOProjects\SimioLLC\RunSimioPortalExpConsole\Source\obj\Debug\RunSimioPortal
 C:\VSOProjects\SimioLLC\RunSimioPortalExpConsole\Source\obj\Debug\RunSimioPortalExpConsole.csproj.CopyComplete
 C:\VSOProjects\SimioLLC\RunSimioPortalExpConsole\Source\obj\Debug\RunSimioPortalExpConsole.exe
 C:\VSOProjects\SimioLLC\RunSimioPortalExpConsole\Source\obj\Debug\RunSimioPortalExpConsole.pdb
+C:\VSOProjects\SimioLLC\RunSimioPortalExpConsole\Executables\RunSimioPortalExpConsole.exe.config
+C:\VSOProjects\SimioLLC\RunSimioPortalExpConsole\Executables\RunSimioPortalExpConsole.exe
+C:\VSOProjects\SimioLLC\RunSimioPortalExpConsole\Executables\RunSimioPortalExpConsole.pdb
