@@ -168,12 +168,6 @@ namespace RunSimioPortalExpConsole
                                 SimioPortalWebAPIHelper.PublishExperimentRunDescription = args[arrayIdx + 1];
                             }
                             break;
-                        case "-apv":
-                            if (arrayIdx < args.Length - 1)
-                            {
-                                SimioPortalWebAPIHelper.AddInParametersValues = args[arrayIdx + 1];
-                            }
-                            break;
                         case "-rld":
                             if (arrayIdx < args.Length - 1)
                             {
@@ -223,7 +217,6 @@ namespace RunSimioPortalExpConsole
                             System.Console.WriteLine("-psd = Publish Schedule Description  (default = " + SimioPortalWebAPIHelper.PublishScheduleDescription + ")");
                             System.Console.WriteLine("-erd = Run Experiment Run Desc  (default = " + SimioPortalWebAPIHelper.RunExperimentRunDesc + ")");
                             System.Console.WriteLine("-rej = Run Experiment Scenareios JSON  (default = " + SimioPortalWebAPIHelper.RunExperimentScenariosJSON + ")");
-                            System.Console.WriteLine("-apr = Add In Parameter Values  (default = " + SimioPortalWebAPIHelper.AddInParametersValues + ")");
                             System.Console.WriteLine("-re = Run Experiment  (default = " + SimioPortalWebAPIHelper.RunExperiment.ToString() + ")");
                             System.Console.WriteLine("-psr = Publish Experiment Run (default = " + SimioPortalWebAPIHelper.PublishExperimentRun.ToString() + ")");
                             System.Console.WriteLine("-pen = Publish Experiment Run Name  (default = " + SimioPortalWebAPIHelper.PublishExperimentRunName + ")");

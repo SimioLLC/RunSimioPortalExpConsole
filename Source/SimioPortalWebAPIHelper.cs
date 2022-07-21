@@ -44,7 +44,6 @@ namespace RunSimioPortalExpConsole
         internal static bool PublishExperimentRun = Properties.Settings.Default.PublishExperimentRun;
         internal static string PublishExperimentRunName = Properties.Settings.Default.PublishExperimentRunName;
         internal static string PublishExperimentRunDescription = Properties.Settings.Default.PublishExperimetnRunDescription;
-        internal static string AddInParametersValues = Properties.Settings.Default.AddInParametersValues;
         internal static bool ExportAllTablesAndLogs = Properties.Settings.Default.ExportAllTablesAndLogs;
         internal static Int32 RunLengthDays = Properties.Settings.Default.RunLengthDays;
         internal static string StartTimeSelection = Properties.Settings.Default.StartTimeSelection;
@@ -336,8 +335,7 @@ namespace RunSimioPortalExpConsole
             request.AlwaysMultipartFormData = true;
             request.AddParameter("Type", "StartExperimentRun");
             if (forSchedules) request.AddParameter("Command", "{\"ExistingExperimentRunId\": " + existingExperimentRuntId.ToString() + ",\"RunPlan\":true,\"RunReplications\":" + RunScheduleRiskAnalysis.ToString().ToLower() + "}");
-            else if (AddInParametersValues.Length == 0) request.AddParameter("Command", "{\"Description\": \"" + RunExperimentRunDesc + "\", \"ExperimentId\": " + experimentId.ToString() + ",\"AllowExportAtEndOfReplication\":true,\"RunReplications\":true, \"CreateInfo\":" + RunExperimentScenariosJSON.ToString() + "}");
-            else request.AddParameter("Command", "{\"Description\": \"" + RunExperimentRunDesc + "\", \"ExperimentId\": " + experimentId.ToString() + ",\"AddInParametersValues\": " + AddInParametersValues + ",\"AllowExportAtEndOfReplication\":true,\"RunReplications\":true, \"CreateInfo\":" + RunExperimentScenariosJSON.ToString() + "}");
+            else request.AddParameter("Command", "{\"Description\": \"" + RunExperimentRunDesc + "\", \"ExperimentId\": " + experimentId.ToString() + ",\"AllowExportAtEndOfReplication\":true,\"RunReplications\":true, \"CreateInfo\":" + RunExperimentScenariosJSON.ToString() + "}");
             IRestResponse response = client.Execute(request);
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
             {

@@ -12,7 +12,7 @@ namespace RunSimioPortalExpConsole.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.8.1.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.2.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -25,7 +25,7 @@ namespace RunSimioPortalExpConsole.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://servicestest1.internal.simioportal.com/")]
+        [global::System.Configuration.DefaultSettingValueAttribute("SetPortalURLHere")]
         public string URL {
             get {
                 return ((string)(this["URL"]));
@@ -37,8 +37,7 @@ namespace RunSimioPortalExpConsole.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("eyJ1IjoiZ3dpcnRoQHNpbWlvLmNvbSIsInQiOiJFSHlxNml2ZXZOOVJ0QUcwYnE0RytuLzZ6d1JYZkc1M" +
-            "DZFa2htaUR1ZkJUV0IwbnI0cE5DdHovaDErRTVnNjgwQjFmMzJKY25aUmw3VTh5ak9tdndzQT09In0=")]
+        [global::System.Configuration.DefaultSettingValueAttribute("CreateWebAPITokenAndAddItHere")]
         public string PersonalAccessToken {
             get {
                 return ((string)(this["PersonalAccessToken"]));
@@ -122,7 +121,7 @@ namespace RunSimioPortalExpConsole.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("SDDP")]
+        [global::System.Configuration.DefaultSettingValueAttribute("SchedulingLaborEfficiencies")]
         public string ProjectName {
             get {
                 return ((string)(this["ProjectName"]));
@@ -134,7 +133,7 @@ namespace RunSimioPortalExpConsole.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("SchedRun")]
+        [global::System.Configuration.DefaultSettingValueAttribute("_ModelValues")]
         public string RunSchedulePlanScenarioName {
             get {
                 return ((string)(this["RunSchedulePlanScenarioName"]));
@@ -158,7 +157,7 @@ namespace RunSimioPortalExpConsole.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool RunSchedule {
             get {
                 return ((bool)(this["RunSchedule"]));
@@ -230,8 +229,7 @@ namespace RunSimioPortalExpConsole.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("{ \"Scenarios\": [{ \"Name\": \"Scenario1\", \"ReplicationsRequired\": 10, \"ControlValues" +
-            "\": [{ \"Name\": \"ToolQty\", \"Value\": 3}]}]}")]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"{ ""Scenarios"": [{ ""Name"": ""Scenario1"", ""ReplicationsRequired"": 10, ""ControlValues"": [{ ""Name"": ""ToolQty"", ""Value"": 1}]},{ ""Name"": ""Scenario2"", ""ReplicationsRequired"": 10, ""ControlValues"": [{ ""Name"": ""ToolQty"", ""Value"": 2}]},{ ""Name"": ""Scenario3"", ""ReplicationsRequired"": 10, ""ControlValues"": [{ ""Name"": ""ToolQty"", ""Value"": 3}]},{ ""Name"": ""Scenario4"", ""ReplicationsRequired"": 10, ""ControlValues"": [{ ""Name"": ""ToolQty"", ""Value"": 4}]},{ ""Name"": ""Scenario5"", ""ReplicationsRequired"": 10, ""ControlValues"": [{ ""Name"": ""ToolQty"", ""Value"": 5}]}]}")]
         public string RunExperimentScenariosJSON {
             get {
                 return ((string)(this["RunExperimentScenariosJSON"]));
@@ -243,19 +241,7 @@ namespace RunSimioPortalExpConsole.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"{""ExperimentAddInId"":""8a14cfc5-581c-46db-b63e-31bdaa98dcb0"",""AddInName"":""OptQuest for Simio"",""AddInParameters"":[{""Name"":""Min Replications"",""Value"": 6},{""Name"":""Max Replications"",""Value"": 20},{""Name"":""Max Scenarios"",""Value"": 300},{""Name"":""Confidence Level"",""Value"":""95%""},{""Name"":""Relative Error"",""Value"": 0.1},{""Name"":""Objective Type"",""Value"":""Single Objective""}],""ControlsAddInParameters"":[{""ControlName"":""ToolQty"",""ControlParameters"":[{""Name"":""Include in Optimization"",""Value"":""Yes""},{""Name"":""Minimum Value"",""Value"": 1},{""Name"":""Maximum Value"",""Value"": 5},{""Name"":""Increment"",""Value"": 1}]}],""ResponsesAddInParameters"":[{""ResponseName"":""AverageLateness"",""ResponseParameters"":[{""Name"":""Weight"",""Value"": 1}]}]}")]
-        public string AddInParametersValues {
-            get {
-                return ((string)(this["AddInParametersValues"]));
-            }
-            set {
-                this["AddInParametersValues"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool RunExperiment {
             get {
                 return ((bool)(this["RunExperiment"]));
@@ -315,7 +301,7 @@ namespace RunSimioPortalExpConsole.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("14")]
+        [global::System.Configuration.DefaultSettingValueAttribute("180")]
         public int RunLengthDays {
             get {
                 return ((int)(this["RunLengthDays"]));
@@ -327,7 +313,7 @@ namespace RunSimioPortalExpConsole.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool ImportAllTables {
             get {
                 return ((bool)(this["ImportAllTables"]));
@@ -351,7 +337,7 @@ namespace RunSimioPortalExpConsole.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Minute")]
+        [global::System.Configuration.DefaultSettingValueAttribute("None")]
         public string StartTimeSelection {
             get {
                 return ((string)(this["StartTimeSelection"]));
