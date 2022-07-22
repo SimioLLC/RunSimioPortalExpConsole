@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="URL" Type="System.String" Scope="User">
-      <Value Profile="(Default)">SetPortalURLHere</Value>
+      <Value Profile="(Default)">https://&lt;YourSimioPortalURL&gt;/</Value>
     </Setting>
     <Setting Name="PersonalAccessToken" Type="System.String" Scope="User">
       <Value Profile="(Default)">CreateWebAPITokenAndAddItHere</Value>
@@ -51,7 +51,7 @@
       <Value Profile="(Default)">SchedRunPubDesc</Value>
     </Setting>
     <Setting Name="RunExperimentRunDesc" Type="System.String" Scope="User">
-      <Value Profile="(Default)">OptquestRun</Value>
+      <Value Profile="(Default)">OptQuestRun</Value>
     </Setting>
     <Setting Name="RunExperimentScenariosJSON" Type="System.String" Scope="User">
       <Value Profile="(Default)">{ "Scenarios": [{ "Name": "Scenario1", "ReplicationsRequired": 10, "ControlValues": [{ "Name": "ToolQty", "Value": 1}]},{ "Name": "Scenario2", "ReplicationsRequired": 10, "ControlValues": [{ "Name": "ToolQty", "Value": 2}]},{ "Name": "Scenario3", "ReplicationsRequired": 10, "ControlValues": [{ "Name": "ToolQty", "Value": 3}]},{ "Name": "Scenario4", "ReplicationsRequired": 10, "ControlValues": [{ "Name": "ToolQty", "Value": 4}]},{ "Name": "Scenario5", "ReplicationsRequired": 10, "ControlValues": [{ "Name": "ToolQty", "Value": 5}]}]}</Value>

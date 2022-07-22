@@ -25,7 +25,7 @@ namespace RunSimioPortalExpConsole.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("SetPortalURLHere")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://<YourSimioPortalURL>/")]
         public string URL {
             get {
                 return ((string)(this["URL"]));
@@ -217,7 +217,7 @@ namespace RunSimioPortalExpConsole.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("OptquestRun")]
+        [global::System.Configuration.DefaultSettingValueAttribute("OptQuestRun")]
         public string RunExperimentRunDesc {
             get {
                 return ((string)(this["RunExperimentRunDesc"]));
