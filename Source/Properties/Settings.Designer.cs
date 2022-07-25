@@ -157,7 +157,7 @@ namespace RunSimioPortalExpConsole.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool RunSchedule {
             get {
                 return ((bool)(this["RunSchedule"]));
@@ -241,7 +241,7 @@ namespace RunSimioPortalExpConsole.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool RunExperiment {
             get {
                 return ((bool)(this["RunExperiment"]));

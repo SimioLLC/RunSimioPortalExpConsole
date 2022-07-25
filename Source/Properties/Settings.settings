@@ -36,7 +36,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="RunSchedule" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="RunScheduleRiskAnalysis" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -57,7 +57,7 @@
       <Value Profile="(Default)">{ "Scenarios": [{ "Name": "Scenario1", "ReplicationsRequired": 10, "ControlValues": [{ "Name": "ToolQty", "Value": 1}]},{ "Name": "Scenario2", "ReplicationsRequired": 10, "ControlValues": [{ "Name": "ToolQty", "Value": 2}]},{ "Name": "Scenario3", "ReplicationsRequired": 10, "ControlValues": [{ "Name": "ToolQty", "Value": 3}]},{ "Name": "Scenario4", "ReplicationsRequired": 10, "ControlValues": [{ "Name": "ToolQty", "Value": 4}]},{ "Name": "Scenario5", "ReplicationsRequired": 10, "ControlValues": [{ "Name": "ToolQty", "Value": 5}]}]}</Value>
     </Setting>
     <Setting Name="RunExperiment" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="PublishExperimentRun" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
