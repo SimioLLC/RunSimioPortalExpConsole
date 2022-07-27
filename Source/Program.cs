@@ -218,7 +218,7 @@ namespace RunSimioPortalExpConsole
                             System.Console.WriteLine("-erd = Run Experiment Run Desc  (default = " + SimioPortalWebAPIHelper.RunExperimentRunDesc + ")");
                             System.Console.WriteLine("-rej = Run Experiment Scenareios JSON  (default = " + SimioPortalWebAPIHelper.RunExperimentScenariosJSON + ")");
                             System.Console.WriteLine("-re = Run Experiment  (default = " + SimioPortalWebAPIHelper.RunExperiment.ToString() + ")");
-                            System.Console.WriteLine("-psr = Publish Experiment Run (default = " + SimioPortalWebAPIHelper.PublishExperimentRun.ToString() + ")");
+                            System.Console.WriteLine("-per = Publish Experiment Run (default = " + SimioPortalWebAPIHelper.PublishExperimentRun.ToString() + ")");
                             System.Console.WriteLine("-pen = Publish Experiment Run Name  (default = " + SimioPortalWebAPIHelper.PublishExperimentRunName + ")");
                             System.Console.WriteLine("-ped = Publish Experiment Run Description  (default = " + SimioPortalWebAPIHelper.PublishExperimentRunDescription + ")");
                             System.Console.WriteLine("-rld = Run Length Days (Scheduling Only) (default = " + SimioPortalWebAPIHelper.RunLengthDays.ToString() + ")");
