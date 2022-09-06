@@ -98,8 +98,8 @@ namespace RunSimioPortalExpConsole
                 IRestResponse response = client.Execute(request);
                 if (response.StatusCode != System.Net.HttpStatusCode.OK)
                 {
-                    if (response.ErrorMessage != null) throw new Exception(response.ErrorMessage);
-                    else throw new Exception(response.Content);
+                    if (response.ErrorMessage != null) throw new Exception(response.StatusDescription + " : " + response.ErrorMessage);
+                    else throw new Exception(response.StatusDescription + " : " + response.Content);
                 }
                 var xmlDoc = responseToXML(response.Content);
                 XmlNodeList node = xmlDoc.GetElementsByTagName("Token");
@@ -134,8 +134,8 @@ namespace RunSimioPortalExpConsole
             IRestResponse response = client.Execute(request);
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
             {
-                if (response.ErrorMessage != null) throw new Exception(response.ErrorMessage);
-                else throw new Exception(response.Content);
+                if (response.ErrorMessage != null) throw new Exception(response.StatusDescription + " : " + response.ErrorMessage);
+                else throw new Exception(response.StatusDescription + " : " + response.Content);
             }
             var xmlDoc = responseToXML(response.Content);
             Int32[] returnInt = new int[2];
@@ -188,8 +188,8 @@ namespace RunSimioPortalExpConsole
             IRestResponse response = client.Execute(request);
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
             {
-                if (response.ErrorMessage != null) throw new Exception(response.ErrorMessage);
-                else throw new Exception(response.Content);
+                if (response.ErrorMessage != null) throw new Exception(response.StatusDescription + " : " + response.ErrorMessage);
+                else throw new Exception(response.StatusDescription + " : " + response.Content);
             }
             var xmlDoc = responseToXML(response.Content);
             var successedNode = xmlDoc.SelectSingleNode("data/Succeeded");
@@ -225,8 +225,8 @@ namespace RunSimioPortalExpConsole
             IRestResponse response = client.Execute(request);
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
             {
-                if (response.ErrorMessage != null) throw new Exception(response.ErrorMessage);
-                else throw new Exception(response.Content);
+                if (response.ErrorMessage != null) throw new Exception(response.StatusDescription + " : " + response.ErrorMessage);
+                else throw new Exception(response.StatusDescription + " : " + response.Content);
             }
             var xmlDoc = responseToXML(response.Content);
             var successedNode = xmlDoc.SelectSingleNode("data/Succeeded");
@@ -262,8 +262,8 @@ namespace RunSimioPortalExpConsole
             IRestResponse response = client.Execute(request);
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
             {
-                if (response.ErrorMessage != null) throw new Exception(response.ErrorMessage);
-                else throw new Exception(response.Content);
+                if (response.ErrorMessage != null) throw new Exception(response.StatusDescription + " : " + response.ErrorMessage);
+                else throw new Exception(response.StatusDescription + " : " + response.Content);
             }
             var xmlDoc = responseToXML(response.Content);
             var successedNode = xmlDoc.SelectSingleNode("data/Succeeded");
@@ -300,8 +300,8 @@ namespace RunSimioPortalExpConsole
             IRestResponse response = client.Execute(request);
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
             {
-                if (response.ErrorMessage != null) throw new Exception(response.ErrorMessage);
-                else throw new Exception(response.Content);
+                if (response.ErrorMessage != null) throw new Exception(response.StatusDescription + " : " + response.ErrorMessage);
+                else throw new Exception(response.StatusDescription + " : " + response.Content);
             }
             var xmlDoc = responseToXML(response.Content);
             var successedNode = xmlDoc.SelectSingleNode("data/Succeeded");
@@ -339,8 +339,8 @@ namespace RunSimioPortalExpConsole
             IRestResponse response = client.Execute(request);
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
             {
-                if (response.ErrorMessage != null) throw new Exception(response.ErrorMessage);
-                else throw new Exception(response.Content);
+                if (response.ErrorMessage != null) throw new Exception(response.StatusDescription + " : " + response.ErrorMessage);
+                else throw new Exception(response.StatusDescription + " : " + response.Content);
             }
             var xmlDoc = responseToXML(response.Content);
             var successedNode = xmlDoc.SelectSingleNode("data/Succeeded");
@@ -381,8 +381,8 @@ namespace RunSimioPortalExpConsole
                 IRestResponse response = client.Execute(request);
                 if (response.StatusCode != System.Net.HttpStatusCode.OK)
                 {
-                    if (response.ErrorMessage != null) throw new Exception(response.ErrorMessage);
-                    else throw new Exception(response.Content);
+                    if (response.ErrorMessage != null) throw new Exception(response.StatusDescription + " : " + response.ErrorMessage);
+                    else throw new Exception(response.StatusDescription + " : " + response.Content);
                 }
                 else
                 {
@@ -445,8 +445,8 @@ namespace RunSimioPortalExpConsole
                 IRestResponse response = client.Execute(request);
                 if (response.StatusCode != System.Net.HttpStatusCode.OK)
                 {
-                    if (response.ErrorMessage != null) throw new Exception(response.ErrorMessage);
-                    else throw new Exception(response.Content);
+                    if (response.ErrorMessage != null) throw new Exception(response.StatusDescription + " : " + response.ErrorMessage);
+                    else throw new Exception(response.StatusDescription + " : " + response.Content);
                 }
                 else
                 {
@@ -514,8 +514,8 @@ namespace RunSimioPortalExpConsole
             IRestResponse response = client.Execute(request);
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
             {
-                if (response.ErrorMessage != null) throw new Exception(response.ErrorMessage);
-                else throw new Exception(response.Content);
+                if (response.ErrorMessage != null) throw new Exception(response.StatusDescription + " : " + response.ErrorMessage);
+                else throw new Exception(response.StatusDescription + " : " + response.Content);
             }
             else
             {

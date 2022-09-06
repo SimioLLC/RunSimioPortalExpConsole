@@ -1,0 +1,9 @@
+C:\VSOProjects\SimioLLC\RunSimioPortalExpConsole\Executables\RunSimioPortalExpConsole.exe.config
+C:\VSOProjects\SimioLLC\RunSimioPortalExpConsole\Executables\RunSimioPortalExpConsole.exe
+C:\VSOProjects\SimioLLC\RunSimioPortalExpConsole\Executables\RunSimioPortalExpConsole.pdb
+C:\VSOProjects\SimioLLC\RunSimioPortalExpConsole\Source\obj\Debug\RunSimioPortalExpConsole.csproj.AssemblyReference.cache
+C:\VSOProjects\SimioLLC\RunSimioPortalExpConsole\Source\obj\Debug\RunSimioPortalExpConsole.csproj.SuggestedBindingRedirects.cache
+C:\VSOProjects\SimioLLC\RunSimioPortalExpConsole\Source\obj\Debug\RunSimioPortalExpConsole.csproj.CoreCompileInputs.cache
+C:\VSOProjects\SimioLLC\RunSimioPortalExpConsole\Source\obj\Debug\RunSimioPortalExpConsole.csproj.CopyComplete
+C:\VSOProjects\SimioLLC\RunSimioPortalExpConsole\Source\obj\Debug\RunSimioPortalExpConsole.exe
+C:\VSOProjects\SimioLLC\RunSimioPortalExpConsole\Source\obj\Debug\RunSimioPortalExpConsole.pdb
