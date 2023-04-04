@@ -192,6 +192,13 @@ namespace RunSimioPortalExpConsole
                                 SimioPortalWebAPIHelper.StartTimeSelection = args[arrayIdx + 1];
                             }
                             break;
+                        case "-sst":
+                            if (arrayIdx < args.Length - 1)
+                            {
+                                if (DateTime.TryParse(args[arrayIdx + 1], out SimioPortalWebAPIHelper.SpecificStartingTime) == false)
+                                    throw new Exception("Invalid Date for -sst:" + args[arrayIdx + 1]);
+                            }
+                            break;
                         case "-btr":
                             if (arrayIdx < args.Length - 1)
                             {
@@ -225,6 +232,7 @@ namespace RunSimioPortalExpConsole
                             System.Console.WriteLine("-iat = Import All Tables (Scheduling Only)  (default = " + SimioPortalWebAPIHelper.ImportAllTables.ToString() + ")");
                             System.Console.WriteLine("-eat = Export All Tables And Logs (Scheduling Only)  (default = " + SimioPortalWebAPIHelper.ExportAllTablesAndLogs.ToString() + ")");
                             System.Console.WriteLine("-sts = Start Time Selection (Scheduling Only)  (default = " + SimioPortalWebAPIHelper.StartTimeSelection + ")");
+                            System.Console.WriteLine("-sst = Specific Starting Time (Scheduling Only)  (default = " + SimioPortalWebAPIHelper.SpecificStartingTime.ToString() + ")");
                             System.Console.WriteLine("-btr = Bearer Token Refresh Interval Minutes (default = " + SimioPortalWebAPIHelper.BearerTokenRefreshIntervalMinutes.ToString() + ")");
                             System.Console.WriteLine("-w = wait (pause) at end  (default = " + SimioPortalWebAPIHelper.WaitAtEnd.ToString() + ")");
                             parametersQuestioned = true;
@@ -301,13 +309,20 @@ namespace RunSimioPortalExpConsole
                         Console.WriteLine("Get Table Import Status Success");
                     }
 
-                    if (SimioPortalWebAPIHelper.RunLengthDays > 0 && (SimioPortalWebAPIHelper.StartTimeSelection == "Second" || 
-                        SimioPortalWebAPIHelper.StartTimeSelection == "Minute" || SimioPortalWebAPIHelper.StartTimeSelection == "Hour" || 
-                        SimioPortalWebAPIHelper.StartTimeSelection == "Day" || SimioPortalWebAPIHelper.StartTimeSelection == "Week" || 
-                        SimioPortalWebAPIHelper.StartTimeSelection == "Month" || SimioPortalWebAPIHelper.StartTimeSelection == "Year"))
+                    if (SimioPortalWebAPIHelper.RunLengthDays > 0 && (SimioPortalWebAPIHelper.StartTimeSelection.ToLower() == "second" || 
+                        SimioPortalWebAPIHelper.StartTimeSelection.ToLower() == "minute" || SimioPortalWebAPIHelper.StartTimeSelection.ToLower() == "hour" || 
+                        SimioPortalWebAPIHelper.StartTimeSelection.ToLower() == "day" || SimioPortalWebAPIHelper.StartTimeSelection.ToLower() == "week" || 
+                        SimioPortalWebAPIHelper.StartTimeSelection.ToLower() == "month" || SimioPortalWebAPIHelper.StartTimeSelection.ToLower() == "year"))
                     {
                         Console.WriteLine("Set Start Time Selection and Experiment Run Length Days....Start Time Selection:" + SimioPortalWebAPIHelper.StartTimeSelection + "|Run Length Days: " + SimioPortalWebAPIHelper.RunLengthDays.ToString());
                         SimioPortalWebAPIHelper.setExperimentRunScenarioStartTimeSelectionRunLengthDays(experimentRunId);
+                    }
+
+                    if (SimioPortalWebAPIHelper.RunLengthDays > 0 && SimioPortalWebAPIHelper.StartTimeSelection.ToLower() == "none" &&
+                        SimioPortalWebAPIHelper.SpecificStartingTime > DateTime.MinValue)
+                    {
+                        Console.WriteLine("Set Specific Starting Time and Experiment Run Length Days....Specific Starting Start:" + SimioPortalWebAPIHelper.SpecificStartingTime.ToString("yyyy-MM-ddTHH:mm:ss") + "|Run Length Days: " + SimioPortalWebAPIHelper.RunLengthDays.ToString());
+                        SimioPortalWebAPIHelper.setExperimentRunScenarioSpecificStartingTimeRunLengthDays(experimentRunId);
                     }
 
                     Console.WriteLine("Start Experiment Run For Schedule");

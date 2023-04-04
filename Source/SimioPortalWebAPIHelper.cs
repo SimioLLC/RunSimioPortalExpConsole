@@ -47,6 +47,7 @@ namespace RunSimioPortalExpConsole
         internal static bool ExportAllTablesAndLogs = Properties.Settings.Default.ExportAllTablesAndLogs;
         internal static Int32 RunLengthDays = Properties.Settings.Default.RunLengthDays;
         internal static string StartTimeSelection = Properties.Settings.Default.StartTimeSelection;
+        internal static DateTime SpecificStartingTime = Properties.Settings.Default.SpecificStartingTime;
         internal static Int32 BearerTokenRefreshIntervalMinutes = Properties.Settings.Default.BearerTokenRefreshIntervalMinutes;
         internal static DateTime BearerTokenRetrievalTime = DateTime.MinValue;
 
@@ -311,6 +312,45 @@ namespace RunSimioPortalExpConsole
                 throw new Exception(failureMessageNode.InnerText);
             }
         }
+
+        internal static void setExperimentRunScenarioSpecificStartingTimeRunLengthDays(Int32 existingExperimentRuntId)
+        {
+            checkAndObtainBearerToken();
+            var client = new RestClient(Uri + "/api/Command");
+            client.Timeout = -1;
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("Content-Type", "multipart/form-data");
+            request.AddHeader("Authorization", "Bearer " + Token);
+            if (String.IsNullOrWhiteSpace(AuthenticationType) == false && AuthenticationType.ToLower() != "none")
+            {
+                if (UseDefaultCredentials)
+                {
+                    request.UseDefaultCredentials = true;
+                }
+                else
+                {
+                    client.Authenticator = new RestSharp.Authenticators.NtlmAuthenticator(Credentials);
+                }
+            }
+
+            request.AlwaysMultipartFormData = true;
+            request.AddParameter("Type", "SetExperimentRunScenarioStartEndType");
+            request.AddParameter("Command", "{\"ExperimentRunId\": " + existingExperimentRuntId.ToString() + ", \"TimeOptions\": {\"IsSpecificStartTime\": true,\"SpecificStartingTime\": \"" + SpecificStartingTime.ToString("yyyy-MM-ddTHH:mm:ss") + "\", \"IsSpecificEndTime\": false,\"EndTimeSelection\": \"Days\",\"EndTimeRunValue\": " + RunLengthDays.ToString() + "}}");
+            IRestResponse response = client.Execute(request);
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                if (response.ErrorMessage != null) throw new Exception(response.StatusDescription + " : " + response.ErrorMessage);
+                else throw new Exception(response.StatusDescription + " : " + response.Content);
+            }
+            var xmlDoc = responseToXML(response.Content);
+            var successedNode = xmlDoc.SelectSingleNode("data/Succeeded");
+            if (successedNode.InnerText.ToLower() == "false")
+            {
+                var failureMessageNode = xmlDoc.SelectSingleNode("data/FailureMessage");
+                throw new Exception(failureMessageNode.InnerText);
+            }
+        }
+
 
         internal static void startExpimentRun(Int32 existingExperimentRuntId, Int32 experimentId, bool forSchedules)
         {

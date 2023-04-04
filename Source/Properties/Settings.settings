@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="URL" Type="System.String" Scope="User">
-      <Value Profile="(Default)">https://&lt;YourSimioPortalURL&gt;/</Value>
+      <Value Profile="(Default)">https://YourSimioPortalURL/</Value>
     </Setting>
     <Setting Name="PersonalAccessToken" Type="System.String" Scope="User">
       <Value Profile="(Default)">CreateWebAPITokenAndAddItHere</Value>
@@ -82,6 +82,9 @@
     </Setting>
     <Setting Name="StartTimeSelection" Type="System.String" Scope="User">
       <Value Profile="(Default)">None</Value>
+    </Setting>
+    <Setting Name="SpecificStartingTime" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="BearerTokenRefreshIntervalMinutes" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">15</Value>
