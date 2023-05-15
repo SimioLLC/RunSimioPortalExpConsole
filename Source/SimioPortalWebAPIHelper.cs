@@ -131,7 +131,7 @@ namespace RunSimioPortalExpConsole
             }
             request.AlwaysMultipartFormData = true;
             request.AddParameter("Type", "GetExperimentRuns");
-            request.AddParameter("Query", "{\"ReturnNonOwnedRuns\":false}");
+            request.AddParameter("Query", "{\"ReturnNonOwnedRuns\":true}");
             IRestResponse response = client.Execute(request);
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
             {
@@ -479,7 +479,7 @@ namespace RunSimioPortalExpConsole
                 }
                 request.AlwaysMultipartFormData = true;
                 request.AddParameter("Type", "GetExperimentRuns");
-                request.AddParameter("Query", "{\"ExperimentId\": " + experimentId.ToString() + ",\"ReturnNonOwnedRuns\":false}");
+                request.AddParameter("Query", "{\"ExperimentId\": " + experimentId.ToString() + ",\"ReturnNonOwnedRuns\":true}");
 
                 Console.WriteLine("Get Experiment Results Attempt Number = " + numberOfQueries.ToString());
                 IRestResponse response = client.Execute(request);
