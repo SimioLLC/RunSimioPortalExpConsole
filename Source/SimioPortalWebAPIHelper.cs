@@ -50,6 +50,7 @@ namespace RunSimioPortalExpConsole
         internal static DateTime SpecificStartingTime = Properties.Settings.Default.SpecificStartingTime;
         internal static Int32 BearerTokenRefreshIntervalMinutes = Properties.Settings.Default.BearerTokenRefreshIntervalMinutes;
         internal static DateTime BearerTokenRetrievalTime = DateTime.MinValue;
+        internal static bool CreatePlanExperimentRunIfNotFound = Properties.Settings.Default.CreatePlanExperimentRunIfNotFound;
 
         internal static void setCredentials()
         {
@@ -157,12 +158,53 @@ namespace RunSimioPortalExpConsole
                     break;
                 }
             }
-            if (returnInt[1] == 0)
+            return returnInt;
+        }
+
+        internal static Int32 findModelId()
+        {
+            checkAndObtainBearerToken();
+            var client = new RestClient(Uri + "/api/Query");
+            client.Timeout = -1;
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("Content-Type", "multipart/form-data");
+            request.AddHeader("Authorization", "Bearer " + Token);
+            if (String.IsNullOrWhiteSpace(AuthenticationType) == false && AuthenticationType.ToLower() != "none")
             {
-                throw new Exception("Experiment Run Cannot Be Found");
+                if (UseDefaultCredentials)
+                {
+                    request.UseDefaultCredentials = true;
+                }
+                else
+                {
+                    client.Authenticator = new RestSharp.Authenticators.NtlmAuthenticator(Credentials);
+                }
+            }
+            request.AlwaysMultipartFormData = true;
+            request.AddParameter("Type", "GetModels");
+            request.AddParameter("Query", "{\"includePublished\":false}");
+            IRestResponse response = client.Execute(request);
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                if (response.ErrorMessage != null) throw new Exception(response.StatusDescription + " : " + response.ErrorMessage);
+                else throw new Exception(response.StatusDescription + " : " + response.Content);
+            }
+            var xmlDoc = responseToXML(response.Content);
+            Int32 returnInt = 0;
+            var dataNodes = xmlDoc.SelectSingleNode("data");
+            foreach (XmlNode itemNodes in dataNodes)
+            {
+                XmlNodeList projectNode = ((XmlElement)itemNodes).GetElementsByTagName("ProjectName");
+                if (ProjectName == projectNode[0].InnerText)
+                {
+                    XmlNodeList idNode = ((XmlElement)itemNodes).GetElementsByTagName("Id");
+                    returnInt = Convert.ToInt32(idNode[0].InnerXml);
+                    break;
+                }
             }
             return returnInt;
         }
+
 
         internal static void exportAllExperimentRunScenarioTableAndLogData(Int32 existingExperimentRuntId)
         {
@@ -223,6 +265,43 @@ namespace RunSimioPortalExpConsole
             request.AlwaysMultipartFormData = true;
             request.AddParameter("Type", "ImportExperimentRunScenarioTableData");
             request.AddParameter("Command", "{\"ExperimentRunId\": " + existingExperimentRuntId.ToString() + ", \"ScenarioName\": \"" + RunSchedulePlanScenarioName + "\", \"CorrelationId\": \"" + correlationId + "\"}");
+            IRestResponse response = client.Execute(request);
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                if (response.ErrorMessage != null) throw new Exception(response.StatusDescription + " : " + response.ErrorMessage);
+                else throw new Exception(response.StatusDescription + " : " + response.Content);
+            }
+            var xmlDoc = responseToXML(response.Content);
+            var successedNode = xmlDoc.SelectSingleNode("data/Succeeded");
+            if (successedNode.InnerText.ToLower() == "false")
+            {
+                var failureMessageNode = xmlDoc.SelectSingleNode("data/FailureMessage");
+                throw new Exception(failureMessageNode.InnerText);
+            }
+        }
+
+        internal static void createExperimentRun(Int32 modelId)
+        {
+            checkAndObtainBearerToken();
+            var client = new RestClient(Uri + "/api/Command");
+            client.Timeout = -1;
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("Content-Type", "multipart/form-data");
+            request.AddHeader("Authorization", "Bearer " + Token);
+            if (String.IsNullOrWhiteSpace(AuthenticationType) == false && AuthenticationType.ToLower() != "none")
+            {
+                if (UseDefaultCredentials)
+                {
+                    request.UseDefaultCredentials = true;
+                }
+                else
+                {
+                    client.Authenticator = new RestSharp.Authenticators.NtlmAuthenticator(Credentials);
+                }
+            }
+            request.AlwaysMultipartFormData = true;
+            request.AddParameter("Type", "CreateExperimentRun");
+            request.AddParameter("Command", "{\"ModelId\": " + modelId.ToString() + ", \"InitialScenarioName\": \"" + RunSchedulePlanScenarioName + "\"}");
             IRestResponse response = client.Execute(request);
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
             {

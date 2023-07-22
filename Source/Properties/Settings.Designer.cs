@@ -133,7 +133,7 @@ namespace RunSimioPortalExpConsole.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("_ModelValues")]
+        [global::System.Configuration.DefaultSettingValueAttribute("TESTNew")]
         public string RunSchedulePlanScenarioName {
             get {
                 return ((string)(this["RunSchedulePlanScenarioName"]));
@@ -367,6 +367,18 @@ namespace RunSimioPortalExpConsole.Properties {
             }
             set {
                 this["BearerTokenRefreshIntervalMinutes"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool CreatePlanExperimentRunIfNotFound {
+            get {
+                return ((bool)(this["CreatePlanExperimentRunIfNotFound"]));
+            }
+            set {
+                this["CreatePlanExperimentRunIfNotFound"] = value;
             }
         }
     }

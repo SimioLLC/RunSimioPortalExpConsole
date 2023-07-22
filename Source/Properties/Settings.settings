@@ -30,7 +30,7 @@
       <Value Profile="(Default)">SchedulingLaborEfficiencies</Value>
     </Setting>
     <Setting Name="RunSchedulePlanScenarioName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">_ModelValues</Value>
+      <Value Profile="(Default)">TESTNew</Value>
     </Setting>
     <Setting Name="RunScheduleControlValuesArray" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
@@ -88,6 +88,9 @@
     </Setting>
     <Setting Name="BearerTokenRefreshIntervalMinutes" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">15</Value>
+    </Setting>
+    <Setting Name="CreatePlanExperimentRunIfNotFound" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

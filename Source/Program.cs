@@ -205,6 +205,12 @@ namespace RunSimioPortalExpConsole
                                 SimioPortalWebAPIHelper.StartTimeSelection = args[arrayIdx + 1];
                             }
                             break;
+                        case "-crn":
+                            if (arrayIdx < args.Length - 1)
+                            {
+                                SimioPortalWebAPIHelper.CreatePlanExperimentRunIfNotFound = Convert.ToBoolean(args[arrayIdx + 1]);
+                            }
+                            break;
                         case "-?":
                             System.Console.WriteLine("-url = Portal url  (default = " + SimioPortalWebAPIHelper.Url + ")");
                             System.Console.WriteLine("-pat = Personal Access Token  (default = " + SimioPortalWebAPIHelper.PersonalAccessToken.ToString() + ")");
@@ -234,6 +240,7 @@ namespace RunSimioPortalExpConsole
                             System.Console.WriteLine("-sts = Start Time Selection (Scheduling Only)  (default = " + SimioPortalWebAPIHelper.StartTimeSelection + ")");
                             System.Console.WriteLine("-sst = Specific Starting Time (Scheduling Only)  (default = " + SimioPortalWebAPIHelper.SpecificStartingTime.ToString() + ")");
                             System.Console.WriteLine("-btr = Bearer Token Refresh Interval Minutes (default = " + SimioPortalWebAPIHelper.BearerTokenRefreshIntervalMinutes.ToString() + ")");
+                            System.Console.WriteLine("-crn = Create Plan Experiment Run If Not Found (default = " + SimioPortalWebAPIHelper.CreatePlanExperimentRunIfNotFound.ToString() + ")");
                             System.Console.WriteLine("-w = wait (pause) at end  (default = " + SimioPortalWebAPIHelper.WaitAtEnd.ToString() + ")");
                             parametersQuestioned = true;
                             break;
@@ -276,8 +283,32 @@ namespace RunSimioPortalExpConsole
             {
                 Console.WriteLine("Find Experiment Ids");
                 Int32[] returnInt32 = SimioPortalWebAPIHelper.findExperimentIds(true);
+
                 Int32 experimentRunId = returnInt32[0];
                 Int32 experimentId = returnInt32[1];
+                if (experimentId == 0)
+                {
+                    if (SimioPortalWebAPIHelper.CreatePlanExperimentRunIfNotFound == false) throw new Exception("Experiment Run Cannot Be Found");
+                    else
+                    {
+                        // Get Model Id
+                        Console.WriteLine("Find Model Id");
+                        Int32 modelId = SimioPortalWebAPIHelper.findModelId();
+                        if (modelId == 0) throw new Exception("Model Id Cannot Be Found");
+
+                        // Create Experiment Run
+                        Console.WriteLine("Create Experiment Run");
+                        SimioPortalWebAPIHelper.createExperimentRun(modelId);
+
+                        Console.WriteLine("Find Experiment Ids For New Experiment Run");
+                        returnInt32 = SimioPortalWebAPIHelper.findExperimentIds(true);
+
+                        experimentRunId = returnInt32[0];
+                        experimentId = returnInt32[1];
+                        if (experimentId == 0) throw new Exception("New Experiment Run Cannot Be Found");
+                    }
+                }
+                
                 Console.WriteLine("ExperimentRunId:" + experimentRunId.ToString() + "|ExperimentId:" + experimentId.ToString());
 
                 // Valid Example of Control Values : WorkersQty=3|VehiclesQty=1
