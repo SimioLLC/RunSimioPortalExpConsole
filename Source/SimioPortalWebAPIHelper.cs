@@ -31,7 +31,7 @@ namespace RunSimioPortalExpConsole
         internal static string ProjectName = Properties.Settings.Default.ProjectName;
         internal static string RunSchedulePlanScenarioName = Properties.Settings.Default.RunSchedulePlanScenarioName;
         internal static string RunExperimentRunDesc = Properties.Settings.Default.RunExperimentRunDesc;
-        internal static string publishScheduleName = Properties.Settings.Default.PublishScheduleName;
+        internal static string PublishScheduleName = Properties.Settings.Default.PublishScheduleName;
         internal static string PublishScheduleDescription = Properties.Settings.Default.PublishScheduleDescription;
         internal static bool ImportAllTables = Properties.Settings.Default.ImportAllTables;
         internal static bool RunSchedule = Properties.Settings.Default.RunSchedule;
@@ -51,6 +51,7 @@ namespace RunSimioPortalExpConsole
         internal static Int32 BearerTokenRefreshIntervalMinutes = Properties.Settings.Default.BearerTokenRefreshIntervalMinutes;
         internal static DateTime BearerTokenRetrievalTime = DateTime.MinValue;
         internal static bool CreatePlanExperimentRunIfNotFound = Properties.Settings.Default.CreatePlanExperimentRunIfNotFound;
+        internal static bool RecreatePlanExperimentRunIfFound = Properties.Settings.Default.RecreatePlanExperimentRunIfFound;
 
         internal static void setCredentials()
         {
@@ -111,7 +112,7 @@ namespace RunSimioPortalExpConsole
             }
         }
 
-        internal static Int32[] findExperimentIds(bool forSchedules)
+        internal static Int32[] findExperimentIds(bool forSchedules, Int32 modelId)
         {
             checkAndObtainBearerToken();
             var client = new RestClient(Uri + "/api/Query");
@@ -145,9 +146,10 @@ namespace RunSimioPortalExpConsole
             foreach (XmlNode itemNodes in dataNodes)
             {
                 XmlNodeList projectNode = ((XmlElement)itemNodes).GetElementsByTagName("ProjectName");
+                XmlNodeList modelIdNode = ((XmlElement)itemNodes).GetElementsByTagName("ModelId");
                 XmlNodeList expRunDescriptionNode = ((XmlElement)itemNodes).GetElementsByTagName("Description");
-                XmlNodeList scenarioNamesNode = ((XmlElement)itemNodes).GetElementsByTagName("ScenarioNames");
-                if (ProjectName == projectNode[0].InnerText &&
+                XmlNodeList scenarioNamesNode = ((XmlElement)itemNodes).GetElementsByTagName("ScenarioNames"); 
+                if (ProjectName == projectNode[0].InnerText && modelId.ToString() == modelIdNode[0].InnerText &&
                     (forSchedules == true && RunSchedulePlanScenarioName == scenarioNamesNode[0].InnerXml) ||
                      (forSchedules == false && RunExperimentRunDesc == expRunDescriptionNode[0].InnerXml))
                 {
@@ -160,6 +162,57 @@ namespace RunSimioPortalExpConsole
             }
             return returnInt;
         }
+
+        internal static Int32[] findExperimentIdsNewPlan(Int32 modelId, string newPlanName)
+        {
+            checkAndObtainBearerToken();
+            var client = new RestClient(Uri + "/api/Query");
+            client.Timeout = -1;
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("Content-Type", "multipart/form-data");
+            request.AddHeader("Authorization", "Bearer " + Token);
+            if (String.IsNullOrWhiteSpace(AuthenticationType) == false && AuthenticationType.ToLower() != "none")
+            {
+                if (UseDefaultCredentials)
+                {
+                    request.UseDefaultCredentials = true;
+                }
+                else
+                {
+                    client.Authenticator = new RestSharp.Authenticators.NtlmAuthenticator(Credentials);
+                }
+            }
+            request.AlwaysMultipartFormData = true;
+            request.AddParameter("Type", "GetExperimentRuns");
+            request.AddParameter("Query", "{\"ReturnNonOwnedRuns\":true}");
+            IRestResponse response = client.Execute(request);
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                if (response.ErrorMessage != null) throw new Exception(response.StatusDescription + " : " + response.ErrorMessage);
+                else throw new Exception(response.StatusDescription + " : " + response.Content);
+            }
+            var xmlDoc = responseToXML(response.Content);
+            Int32[] returnInt = new int[2];
+            var dataNodes = xmlDoc.SelectSingleNode("data");
+            foreach (XmlNode itemNodes in dataNodes)
+            {
+                XmlNodeList projectNode = ((XmlElement)itemNodes).GetElementsByTagName("ProjectName");
+                XmlNodeList modelIdNode = ((XmlElement)itemNodes).GetElementsByTagName("ModelId");
+                XmlNodeList expRunDescriptionNode = ((XmlElement)itemNodes).GetElementsByTagName("Description");
+                XmlNodeList scenarioNamesNode = ((XmlElement)itemNodes).GetElementsByTagName("ScenarioNames");
+                if (ProjectName == projectNode[0].InnerText && modelId.ToString() == modelIdNode[0].InnerText &&
+                    newPlanName == scenarioNamesNode[0].InnerXml) 
+                {
+                    XmlNodeList idNode = ((XmlElement)itemNodes).GetElementsByTagName("Id");
+                    XmlNodeList experimentIdNode = ((XmlElement)itemNodes).GetElementsByTagName("ExperimentId");
+                    returnInt[0] = Convert.ToInt32(idNode[0].InnerXml);
+                    returnInt[1] = Convert.ToInt32(experimentIdNode[0].InnerXml);
+                    break;
+                }
+            }
+            return returnInt;
+        }
+
 
         internal static Int32 findModelId()
         {
@@ -205,8 +258,7 @@ namespace RunSimioPortalExpConsole
             return returnInt;
         }
 
-
-        internal static void exportAllExperimentRunScenarioTableAndLogData(Int32 existingExperimentRuntId)
+        internal static void exportAllExperimentRunScenarioTableAndLogData(Int32 existingExperimentRuntId, string correlationId)
         {
             checkAndObtainBearerToken();
             var client = new RestClient(Uri + "/api/Command");
@@ -227,7 +279,7 @@ namespace RunSimioPortalExpConsole
             }
             request.AlwaysMultipartFormData = true;
             request.AddParameter("Type", "ExportTablesAndLogs");
-            request.AddParameter("Command", "{\"ExperimentRunId\": " + existingExperimentRuntId.ToString() + ",\"ExportAllLogs\":true,\"ExportAllTables\":true, \"ScenarioName\": \"" + RunSchedulePlanScenarioName + "\"}");
+            request.AddParameter("Command", "{\"ExperimentRunId\": " + existingExperimentRuntId.ToString() + ",\"ExportAllLogs\":true,\"ExportAllTables\":true, \"ScenarioName\": \"" + RunSchedulePlanScenarioName + "\", \"CorrelationId\": \"" + correlationId + "\"}");
             IRestResponse response = client.Execute(request);
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
             {
@@ -302,6 +354,117 @@ namespace RunSimioPortalExpConsole
             request.AlwaysMultipartFormData = true;
             request.AddParameter("Type", "CreateExperimentRun");
             request.AddParameter("Command", "{\"ModelId\": " + modelId.ToString() + ", \"InitialScenarioName\": \"" + RunSchedulePlanScenarioName + "\"}");
+            IRestResponse response = client.Execute(request);
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                if (response.ErrorMessage != null) throw new Exception(response.StatusDescription + " : " + response.ErrorMessage);
+                else throw new Exception(response.StatusDescription + " : " + response.Content);
+            }
+            var xmlDoc = responseToXML(response.Content);
+            var successedNode = xmlDoc.SelectSingleNode("data/Succeeded");
+            if (successedNode.InnerText.ToLower() == "false")
+            {
+                var failureMessageNode = xmlDoc.SelectSingleNode("data/FailureMessage");
+                throw new Exception(failureMessageNode.InnerText);
+            }
+        }
+
+        internal static void createExperimentRunFromExistingPlan(Int32 modelId, Int32 existingExperimentRunId, string newPlanName)
+        {
+            checkAndObtainBearerToken();
+            var client = new RestClient(Uri + "/api/Command");
+            client.Timeout = -1;
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("Content-Type", "multipart/form-data");
+            request.AddHeader("Authorization", "Bearer " + Token);
+            if (String.IsNullOrWhiteSpace(AuthenticationType) == false && AuthenticationType.ToLower() != "none")
+            {
+                if (UseDefaultCredentials)
+                {
+                    request.UseDefaultCredentials = true;
+                }
+                else
+                {
+                    client.Authenticator = new RestSharp.Authenticators.NtlmAuthenticator(Credentials);
+                }
+            }
+            request.AlwaysMultipartFormData = true;
+            request.AddParameter("Type", "CreateExperimentRun");
+            request.AddParameter("Command", "{\"ModelId\": " + modelId.ToString() + ", \"InitialScenarioName\": \"" + newPlanName + "\",\"SourceExperimentRunId\": " + existingExperimentRunId.ToString() + ", \"SourceExperimentRunScenarioName\": \"" + RunSchedulePlanScenarioName + "\"}");
+            IRestResponse response = client.Execute(request);
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                if (response.ErrorMessage != null) throw new Exception(response.StatusDescription + " : " + response.ErrorMessage);
+                else throw new Exception(response.StatusDescription + " : " + response.Content);
+            }
+            var xmlDoc = responseToXML(response.Content);
+            var successedNode = xmlDoc.SelectSingleNode("data/Succeeded");
+            if (successedNode.InnerText.ToLower() == "false")
+            {
+                var failureMessageNode = xmlDoc.SelectSingleNode("data/FailureMessage");
+                throw new Exception(failureMessageNode.InnerText);
+            }
+        }
+
+        internal static void deletePlan(Int32 existingExperimentRunId)
+        {
+            checkAndObtainBearerToken();
+            var client = new RestClient(Uri + "/api/Command");
+            client.Timeout = -1;
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("Content-Type", "multipart/form-data");
+            request.AddHeader("Authorization", "Bearer " + Token);
+            if (String.IsNullOrWhiteSpace(AuthenticationType) == false && AuthenticationType.ToLower() != "none")
+            {
+                if (UseDefaultCredentials)
+                {
+                    request.UseDefaultCredentials = true;
+                }
+                else
+                {
+                    client.Authenticator = new RestSharp.Authenticators.NtlmAuthenticator(Credentials);
+                }
+            }
+            request.AlwaysMultipartFormData = true;
+            request.AddParameter("Type", "DeleteExperimentRun");
+            request.AddParameter("Command", "{\"ExperimentRunId\": " + existingExperimentRunId.ToString() + "}");
+            IRestResponse response = client.Execute(request);
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                if (response.ErrorMessage != null) throw new Exception(response.StatusDescription + " : " + response.ErrorMessage);
+                else throw new Exception(response.StatusDescription + " : " + response.Content);
+            }
+            var xmlDoc = responseToXML(response.Content);
+            var successedNode = xmlDoc.SelectSingleNode("data/Succeeded");
+            if (successedNode.InnerText.ToLower() == "false")
+            {
+                var failureMessageNode = xmlDoc.SelectSingleNode("data/FailureMessage");
+                throw new Exception(failureMessageNode.InnerText);
+            }
+        }
+
+        internal static void renamePlan(Int32 existingExperimentRunId, string newPlanName)
+        {
+            checkAndObtainBearerToken();
+            var client = new RestClient(Uri + "/api/Command");
+            client.Timeout = -1;
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("Content-Type", "multipart/form-data");
+            request.AddHeader("Authorization", "Bearer " + Token);
+            if (String.IsNullOrWhiteSpace(AuthenticationType) == false && AuthenticationType.ToLower() != "none")
+            {
+                if (UseDefaultCredentials)
+                {
+                    request.UseDefaultCredentials = true;
+                }
+                else
+                {
+                    client.Authenticator = new RestSharp.Authenticators.NtlmAuthenticator(Credentials);
+                }
+            }
+            request.AlwaysMultipartFormData = true;
+            request.AddParameter("Type", "RenameExperimentRunScenario");
+            request.AddParameter("Command", "{\"ExperimentRunId\": " + existingExperimentRunId.ToString() + ", \"NewScenarioName\": \"" + RunSchedulePlanScenarioName + "\", \"OldScenarioName\": \"" + newPlanName + "\"}");
             IRestResponse response = client.Execute(request);
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
             {
@@ -430,7 +593,6 @@ namespace RunSimioPortalExpConsole
             }
         }
 
-
         internal static void startExpimentRun(Int32 existingExperimentRuntId, Int32 experimentId, bool forSchedules)
         {
             checkAndObtainBearerToken();
@@ -494,6 +656,69 @@ namespace RunSimioPortalExpConsole
                 }
                 request.AlwaysMultipartFormData = true;
                 request.AddParameter("Type", "GetExperimentRunScenarioTableImports");
+                request.AddParameter("Query", "{\"ExperimentRunId\": " + experimentRunId.ToString() + ", \"CorrelationId\": \"" + correlationId + "\"}");
+
+                Console.WriteLine("Get Table Import Status Attempt Number = " + numberOfQueries.ToString());
+                IRestResponse response = client.Execute(request);
+                if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    if (response.ErrorMessage != null) throw new Exception(response.StatusDescription + " : " + response.ErrorMessage);
+                    else throw new Exception(response.StatusDescription + " : " + response.Content);
+                }
+                else
+                {
+                    var xmlDoc = responseToXML(response.Content);
+                    XmlNodeList runStatusList = xmlDoc.SelectNodes("data/items");
+                    var lastRunStatus = runStatusList[runStatusList.Count - 1];
+                    int statusInt = Convert.ToInt32(lastRunStatus["Status"].InnerText);
+                    // still running
+                    if (statusInt < 2) numberOfQueries++;
+                    // success
+                    else if (statusInt == 2)
+                    {
+                        break;
+                    }
+                    // failure
+                    else
+                    {
+                        throw new Exception(lastRunStatus["StatusMessage"].InnerText);
+                    }
+                }
+                System.Threading.Thread.Sleep(RetryResultsIntervalSeconds * 1000);
+            } while (numberOfQueries <= RetryResultsMaxAttempts);
+
+            if (numberOfQueries > RetryResultsMaxAttempts)
+            {
+                throw new Exception("Number of Retry Results Max Attemps Reached");
+            }
+
+            return experimentRunId;
+        }
+
+        internal static Int32 getExperimentRunScenarioTableExports(Int32 experimentRunId, string correlationId)
+        {
+            Int32 numberOfQueries = 1;
+            do
+            {
+                checkAndObtainBearerToken();
+                var client = new RestClient(Uri + "/api/Query");
+                client.Timeout = -1;
+                var request = new RestRequest(Method.POST);
+                request.AddHeader("Content-Type", "multipart/form-data");
+                request.AddHeader("Authorization", "Bearer " + Token);
+                if (String.IsNullOrWhiteSpace(AuthenticationType) == false && AuthenticationType.ToLower() != "none")
+                {
+                    if (UseDefaultCredentials)
+                    {
+                        request.UseDefaultCredentials = true;
+                    }
+                    else
+                    {
+                        client.Authenticator = new RestSharp.Authenticators.NtlmAuthenticator(Credentials);
+                    }
+                }
+                request.AlwaysMultipartFormData = true;
+                request.AddParameter("Type", "GetExperimentRunScenarioTableExports");
                 request.AddParameter("Query", "{\"ExperimentRunId\": " + experimentRunId.ToString() + ", \"CorrelationId\": \"" + correlationId + "\"}");
 
                 Console.WriteLine("Get Table Import Status Attempt Number = " + numberOfQueries.ToString());
@@ -623,7 +848,7 @@ namespace RunSimioPortalExpConsole
             if (forSchedules)
             {
                 request.AddParameter("Type", "PublishScenarioPlanResults");
-                request.AddParameter("Command", "{\"ExperimentRunId\": " + experimenRuntId.ToString() + ",\"PublishDescription\": \"" + PublishScheduleDescription + "\",\"PublishName\": \"" + publishScheduleName + "\"}");
+                request.AddParameter("Command", "{\"ExperimentRunId\": " + experimenRuntId.ToString() + ",\"PublishDescription\": \"" + PublishScheduleDescription + "\",\"PublishName\": \"" + PublishScheduleName + "\"}");
             }
             else
             {

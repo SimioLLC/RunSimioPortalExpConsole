@@ -30,7 +30,7 @@
       <Value Profile="(Default)">SchedulingLaborEfficiencies</Value>
     </Setting>
     <Setting Name="RunSchedulePlanScenarioName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">TESTNew</Value>
+      <Value Profile="(Default)">_ModelValues</Value>
     </Setting>
     <Setting Name="RunScheduleControlValuesArray" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
@@ -42,7 +42,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="PublishSchduleRun" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="PublishScheduleName" Type="System.String" Scope="User">
       <Value Profile="(Default)">SchedRunPub</Value>
@@ -91,6 +91,9 @@
     </Setting>
     <Setting Name="CreatePlanExperimentRunIfNotFound" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="RecreatePlanExperimentRunIfFound" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

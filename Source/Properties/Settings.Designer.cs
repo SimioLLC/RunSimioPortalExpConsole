@@ -133,7 +133,7 @@ namespace RunSimioPortalExpConsole.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("TESTNew")]
+        [global::System.Configuration.DefaultSettingValueAttribute("_ModelValues")]
         public string RunSchedulePlanScenarioName {
             get {
                 return ((string)(this["RunSchedulePlanScenarioName"]));
@@ -181,7 +181,7 @@ namespace RunSimioPortalExpConsole.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool PublishSchduleRun {
             get {
                 return ((bool)(this["PublishSchduleRun"]));
@@ -379,6 +379,18 @@ namespace RunSimioPortalExpConsole.Properties {
             }
             set {
                 this["CreatePlanExperimentRunIfNotFound"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RecreatePlanExperimentRunIfFound {
+            get {
+                return ((bool)(this["RecreatePlanExperimentRunIfFound"]));
+            }
+            set {
+                this["RecreatePlanExperimentRunIfFound"] = value;
             }
         }
     }

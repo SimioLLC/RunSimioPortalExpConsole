@@ -99,7 +99,7 @@ namespace RunSimioPortalExpConsole
                         case "-psn":
                             if (arrayIdx < args.Length - 1)
                             {
-                                SimioPortalWebAPIHelper.publishScheduleName = args[arrayIdx + 1];
+                                SimioPortalWebAPIHelper.PublishScheduleName = args[arrayIdx + 1];
                             }
                             break;
                         case "-psd":
@@ -211,6 +211,12 @@ namespace RunSimioPortalExpConsole
                                 SimioPortalWebAPIHelper.CreatePlanExperimentRunIfNotFound = Convert.ToBoolean(args[arrayIdx + 1]);
                             }
                             break;
+                        case "-rrn":
+                            if (arrayIdx < args.Length - 1)
+                            {
+                                SimioPortalWebAPIHelper.RecreatePlanExperimentRunIfFound = Convert.ToBoolean(args[arrayIdx + 1]);
+                            }
+                            break;
                         case "-?":
                             System.Console.WriteLine("-url = Portal url  (default = " + SimioPortalWebAPIHelper.Url + ")");
                             System.Console.WriteLine("-pat = Personal Access Token  (default = " + SimioPortalWebAPIHelper.PersonalAccessToken.ToString() + ")");
@@ -226,7 +232,7 @@ namespace RunSimioPortalExpConsole
                             System.Console.WriteLine("-rs = Run Schedule  (default = " + SimioPortalWebAPIHelper.RunSchedule.ToString() + ")");
                             System.Console.WriteLine("-rra = Run RiskAnalysis  (default = " + SimioPortalWebAPIHelper.RunScheduleRiskAnalysis.ToString() + ")");
                             System.Console.WriteLine("-psr = Publish Schedule Plan Run (default = " + SimioPortalWebAPIHelper.PublishScheduleRun.ToString() + ")");
-                            System.Console.WriteLine("-psn = Publish Schedule Name  (default = " + SimioPortalWebAPIHelper.publishScheduleName + ")");
+                            System.Console.WriteLine("-psn = Publish Schedule Name  (default = " + SimioPortalWebAPIHelper.PublishScheduleName + ")");
                             System.Console.WriteLine("-psd = Publish Schedule Description  (default = " + SimioPortalWebAPIHelper.PublishScheduleDescription + ")");
                             System.Console.WriteLine("-erd = Run Experiment Run Desc  (default = " + SimioPortalWebAPIHelper.RunExperimentRunDesc + ")");
                             System.Console.WriteLine("-rej = Run Experiment Scenareios JSON  (default = " + SimioPortalWebAPIHelper.RunExperimentScenariosJSON + ")");
@@ -281,8 +287,14 @@ namespace RunSimioPortalExpConsole
             // for schedules
             if (SimioPortalWebAPIHelper.ImportAllTables || SimioPortalWebAPIHelper.RunSchedule || SimioPortalWebAPIHelper.ExportAllTablesAndLogs || SimioPortalWebAPIHelper.PublishScheduleRun)
             {
+                // Get Model Id
+                Console.WriteLine("Find Model Id");
+                Int32 modelId = SimioPortalWebAPIHelper.findModelId();
+                if (modelId == 0) throw new Exception("Model Id Cannot Be Found");
+                else Console.WriteLine("ModelId:" + modelId.ToString());
+
                 Console.WriteLine("Find Experiment Ids");
-                Int32[] returnInt32 = SimioPortalWebAPIHelper.findExperimentIds(true);
+                Int32[] returnInt32 = SimioPortalWebAPIHelper.findExperimentIds(true, modelId);
 
                 Int32 experimentRunId = returnInt32[0];
                 Int32 experimentId = returnInt32[1];
@@ -291,17 +303,12 @@ namespace RunSimioPortalExpConsole
                     if (SimioPortalWebAPIHelper.CreatePlanExperimentRunIfNotFound == false) throw new Exception("Experiment Run Cannot Be Found");
                     else
                     {
-                        // Get Model Id
-                        Console.WriteLine("Find Model Id");
-                        Int32 modelId = SimioPortalWebAPIHelper.findModelId();
-                        if (modelId == 0) throw new Exception("Model Id Cannot Be Found");
-
                         // Create Experiment Run
                         Console.WriteLine("Create Experiment Run");
                         SimioPortalWebAPIHelper.createExperimentRun(modelId);
 
                         Console.WriteLine("Find Experiment Ids For New Experiment Run");
-                        returnInt32 = SimioPortalWebAPIHelper.findExperimentIds(true);
+                        returnInt32 = SimioPortalWebAPIHelper.findExperimentIds(true, modelId);
 
                         experimentRunId = returnInt32[0];
                         experimentId = returnInt32[1];
@@ -309,6 +316,33 @@ namespace RunSimioPortalExpConsole
                     }
                 }
                 
+                if (SimioPortalWebAPIHelper.RecreatePlanExperimentRunIfFound == true)
+                {
+                    Console.WriteLine("Create Experiment Run From Existing Plan");
+                    string newPlanName = SimioPortalWebAPIHelper.RunSchedulePlanScenarioName + "_Temp";
+                    SimioPortalWebAPIHelper.createExperimentRunFromExistingPlan(modelId, experimentRunId, newPlanName);
+
+                    Console.WriteLine("Delete Existing Plan");
+                    SimioPortalWebAPIHelper.deletePlan(experimentRunId);
+
+                    Console.WriteLine("Find Experiment Ids For New Plan Name");
+                    returnInt32 = SimioPortalWebAPIHelper.findExperimentIdsNewPlan(modelId, newPlanName);
+
+                    experimentRunId = returnInt32[0];
+                    experimentId = returnInt32[1];
+                    if (experimentId == 0) throw new Exception("New Experiment Run For New Plan Cannot Be Found");
+
+                    Console.WriteLine("Rename Existing Plan");
+                    SimioPortalWebAPIHelper.renamePlan(experimentRunId, newPlanName);
+
+                    Console.WriteLine("Find Experiment Ids For New Experiment Run");
+                    returnInt32 = SimioPortalWebAPIHelper.findExperimentIds(true, modelId);
+
+                    experimentRunId = returnInt32[0];
+                    experimentId = returnInt32[1];
+                    if (experimentId == 0) throw new Exception("New Experiment Run Cannot Be Found");
+                }
+                                
                 Console.WriteLine("ExperimentRunId:" + experimentRunId.ToString() + "|ExperimentId:" + experimentId.ToString());
 
                 // Valid Example of Control Values : WorkersQty=3|VehiclesQty=1
@@ -365,8 +399,11 @@ namespace RunSimioPortalExpConsole
 
                 if (SimioPortalWebAPIHelper.ExportAllTablesAndLogs)
                 {
-                    Console.WriteLine("Export All Experiment Run Scenario Table And Log Data");
-                    SimioPortalWebAPIHelper.exportAllExperimentRunScenarioTableAndLogData(experimentRunId);
+                    var correlationId = Guid.NewGuid().ToString();
+                    Console.WriteLine("Export All Experiment Run Scenario Table And Log Data....CorrelationId:" + correlationId);
+                    SimioPortalWebAPIHelper.exportAllExperimentRunScenarioTableAndLogData(experimentRunId, correlationId);
+                    SimioPortalWebAPIHelper.getExperimentRunScenarioTableExports(experimentRunId, correlationId);
+                    Console.WriteLine("Get Table Exports Status Success");
                 }
 
                 if (SimioPortalWebAPIHelper.PublishScheduleRun)
@@ -379,8 +416,13 @@ namespace RunSimioPortalExpConsole
             // for experiments
             if (SimioPortalWebAPIHelper.RunExperiment || SimioPortalWebAPIHelper.PublishExperimentRun)
             {
+                // Get Model Id
+                Console.WriteLine("Find Model Id");
+                Int32 modelId = SimioPortalWebAPIHelper.findModelId();
+                if (modelId == 0) throw new Exception("Model Id Cannot Be Found");
+
                 Console.WriteLine("Find Experiment Ids");
-                Int32[] returnInt32 = SimioPortalWebAPIHelper.findExperimentIds(false);
+                Int32[] returnInt32 = SimioPortalWebAPIHelper.findExperimentIds(false, modelId);
                 Int32 experimentRunId = returnInt32[0];
                 Int32 experimentId = returnInt32[1];
                 Console.WriteLine("ExperimentRunId:" + experimentRunId.ToString() + "|ExperimentId:" + experimentId.ToString());
