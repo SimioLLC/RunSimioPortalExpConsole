@@ -52,6 +52,7 @@ namespace RunSimioPortalExpConsole
         internal static DateTime BearerTokenRetrievalTime = DateTime.MinValue;
         internal static bool CreatePlanExperimentRunIfNotFound = Properties.Settings.Default.CreatePlanExperimentRunIfNotFound;
         internal static bool RecreatePlanExperimentRunIfFound = Properties.Settings.Default.RecreatePlanExperimentRunIfFound;
+        internal static bool DeletePlanExperimentRunAfterSuccessfulRun = Properties.Settings.Default.DeletePlanExperimentRunAfterSuccessfulRun;
 
         internal static void setCredentials()
         {
@@ -758,10 +759,9 @@ namespace RunSimioPortalExpConsole
             return experimentRunId;
         }
 
-        internal static Int32 findExperimentResults(Int32 experimentId, bool forSchedules)
+        internal static void findExperimentRunResults(Int32 experimentRunId, bool forSchedules)
         {
             Int32 numberOfQueries = 1;
-            Int32 experimentRunId = -1;
             do
             {
                 checkAndObtainBearerToken();
@@ -783,7 +783,7 @@ namespace RunSimioPortalExpConsole
                 }
                 request.AlwaysMultipartFormData = true;
                 request.AddParameter("Type", "GetExperimentRuns");
-                request.AddParameter("Query", "{\"ExperimentId\": " + experimentId.ToString() + ",\"ReturnNonOwnedRuns\":true}");
+                request.AddParameter("Query", "{\"ExperimentRunId\": " + experimentRunId.ToString() + ",\"ReturnNonOwnedRuns\":true}");
 
                 Console.WriteLine("Get Experiment Results Attempt Number = " + numberOfQueries.ToString());
                 IRestResponse response = client.Execute(request);
@@ -805,7 +805,6 @@ namespace RunSimioPortalExpConsole
                     // success
                     else if (statusInt == 2)
                     {
-                        experimentRunId = Convert.ToInt32(lastRunStatus["Id"].InnerText);
                         break;
                     }
                     // failure
@@ -822,7 +821,7 @@ namespace RunSimioPortalExpConsole
                 throw new Exception("Number of Retry Results Max Attemps Reached");
             }
 
-            return experimentRunId;
+            return;
         }
 
         internal static void publishResults(Int32 experimenRuntId, bool forSchedules)

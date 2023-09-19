@@ -42,7 +42,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="PublishSchduleRun" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="PublishScheduleName" Type="System.String" Scope="User">
       <Value Profile="(Default)">SchedRunPub</Value>
@@ -93,6 +93,9 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="RecreatePlanExperimentRunIfFound" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="DeletePlanExperimentRunAfterSuccessfulRun" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>

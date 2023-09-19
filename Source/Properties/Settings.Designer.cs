@@ -181,7 +181,7 @@ namespace RunSimioPortalExpConsole.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool PublishSchduleRun {
             get {
                 return ((bool)(this["PublishSchduleRun"]));
@@ -391,6 +391,18 @@ namespace RunSimioPortalExpConsole.Properties {
             }
             set {
                 this["RecreatePlanExperimentRunIfFound"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DeletePlanExperimentRunAfterSuccessfulRun {
+            get {
+                return ((bool)(this["DeletePlanExperimentRunAfterSuccessfulRun"]));
+            }
+            set {
+                this["DeletePlanExperimentRunAfterSuccessfulRun"] = value;
             }
         }
     }

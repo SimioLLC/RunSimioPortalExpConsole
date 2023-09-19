@@ -247,6 +247,7 @@ namespace RunSimioPortalExpConsole
                             System.Console.WriteLine("-sst = Specific Starting Time (Scheduling Only)  (default = " + SimioPortalWebAPIHelper.SpecificStartingTime.ToString() + ")");
                             System.Console.WriteLine("-btr = Bearer Token Refresh Interval Minutes (default = " + SimioPortalWebAPIHelper.BearerTokenRefreshIntervalMinutes.ToString() + ")");
                             System.Console.WriteLine("-crn = Create Plan Experiment Run If Not Found (default = " + SimioPortalWebAPIHelper.CreatePlanExperimentRunIfNotFound.ToString() + ")");
+                            System.Console.WriteLine("-drn = Delete Plan Experiment Run After Successful Run (default = " + SimioPortalWebAPIHelper.DeletePlanExperimentRunAfterSuccessfulRun.ToString() + ")");
                             System.Console.WriteLine("-w = wait (pause) at end  (default = " + SimioPortalWebAPIHelper.WaitAtEnd.ToString() + ")");
                             parametersQuestioned = true;
                             break;
@@ -296,7 +297,7 @@ namespace RunSimioPortalExpConsole
                 Console.WriteLine("Find Experiment Ids");
                 Int32[] returnInt32 = SimioPortalWebAPIHelper.findExperimentIds(true, modelId);
 
-                Int32 experimentRunId = returnInt32[0];
+                Int32 parentExperimentRunId = returnInt32[0];
                 Int32 experimentId = returnInt32[1];
                 if (experimentId == 0)
                 {
@@ -310,7 +311,7 @@ namespace RunSimioPortalExpConsole
                         Console.WriteLine("Find Experiment Ids For New Experiment Run");
                         returnInt32 = SimioPortalWebAPIHelper.findExperimentIds(true, modelId);
 
-                        experimentRunId = returnInt32[0];
+                        parentExperimentRunId = returnInt32[0];
                         experimentId = returnInt32[1];
                         if (experimentId == 0) throw new Exception("New Experiment Run Cannot Be Found");
                     }
@@ -320,30 +321,30 @@ namespace RunSimioPortalExpConsole
                 {
                     Console.WriteLine("Create Experiment Run From Existing Plan");
                     string newPlanName = SimioPortalWebAPIHelper.RunSchedulePlanScenarioName + "_Temp";
-                    SimioPortalWebAPIHelper.createExperimentRunFromExistingPlan(modelId, experimentRunId, newPlanName);
+                    SimioPortalWebAPIHelper.createExperimentRunFromExistingPlan(modelId, parentExperimentRunId, newPlanName);
 
                     Console.WriteLine("Delete Existing Plan");
-                    SimioPortalWebAPIHelper.deletePlan(experimentRunId);
+                    SimioPortalWebAPIHelper.deletePlan(parentExperimentRunId);
 
                     Console.WriteLine("Find Experiment Ids For New Plan Name");
                     returnInt32 = SimioPortalWebAPIHelper.findExperimentIdsNewPlan(modelId, newPlanName);
 
-                    experimentRunId = returnInt32[0];
+                    parentExperimentRunId = returnInt32[0];
                     experimentId = returnInt32[1];
                     if (experimentId == 0) throw new Exception("New Experiment Run For New Plan Cannot Be Found");
 
                     Console.WriteLine("Rename Existing Plan");
-                    SimioPortalWebAPIHelper.renamePlan(experimentRunId, newPlanName);
+                    SimioPortalWebAPIHelper.renamePlan(parentExperimentRunId, newPlanName);
 
                     Console.WriteLine("Find Experiment Ids For New Experiment Run");
                     returnInt32 = SimioPortalWebAPIHelper.findExperimentIds(true, modelId);
 
-                    experimentRunId = returnInt32[0];
+                    parentExperimentRunId = returnInt32[0];
                     experimentId = returnInt32[1];
                     if (experimentId == 0) throw new Exception("New Experiment Run Cannot Be Found");
                 }
                                 
-                Console.WriteLine("ExperimentRunId:" + experimentRunId.ToString() + "|ExperimentId:" + experimentId.ToString());
+                Console.WriteLine("ExperimentRunId:" + parentExperimentRunId.ToString() + "|ExperimentId:" + experimentId.ToString());
 
                 // Valid Example of Control Values : WorkersQty=3|VehiclesQty=1
                 if (SimioPortalWebAPIHelper.RunScheduleControlValuesArray.Length > 0)
@@ -359,7 +360,7 @@ namespace RunSimioPortalExpConsole
                     foreach (KeyValuePair<string, string> p in keyValuePairs)
                     {
                         Console.WriteLine("Set Experiment Run Scenario Control Value For Name=Value : " + p.Key + "=" + p.Value);
-                        SimioPortalWebAPIHelper.setExperimentRunScenarioControlValue(experimentRunId, p.Key, p.Value);
+                        SimioPortalWebAPIHelper.setExperimentRunScenarioControlValue(parentExperimentRunId, p.Key, p.Value);
                     }
                 }
 
@@ -369,8 +370,8 @@ namespace RunSimioPortalExpConsole
                     {
                         var correlationId = Guid.NewGuid().ToString();
                         Console.WriteLine("Import All Experiment Run Scenario Table Data....CorrelationId:" + correlationId);
-                        SimioPortalWebAPIHelper.importAllExperimentRunScenarioTableData(experimentRunId, correlationId);
-                        SimioPortalWebAPIHelper.getExperimentRunScenarioTableImports(experimentRunId, correlationId);
+                        SimioPortalWebAPIHelper.importAllExperimentRunScenarioTableData(parentExperimentRunId, correlationId);
+                        SimioPortalWebAPIHelper.getExperimentRunScenarioTableImports(parentExperimentRunId, correlationId);
                         Console.WriteLine("Get Table Import Status Success");
                     }
 
@@ -380,36 +381,42 @@ namespace RunSimioPortalExpConsole
                         SimioPortalWebAPIHelper.StartTimeSelection.ToLower() == "month" || SimioPortalWebAPIHelper.StartTimeSelection.ToLower() == "year"))
                     {
                         Console.WriteLine("Set Start Time Selection and Experiment Run Length Days....Start Time Selection:" + SimioPortalWebAPIHelper.StartTimeSelection + "|Run Length Days: " + SimioPortalWebAPIHelper.RunLengthDays.ToString());
-                        SimioPortalWebAPIHelper.setExperimentRunScenarioStartTimeSelectionRunLengthDays(experimentRunId);
+                        SimioPortalWebAPIHelper.setExperimentRunScenarioStartTimeSelectionRunLengthDays(parentExperimentRunId);
                     }
 
                     if (SimioPortalWebAPIHelper.RunLengthDays > 0 && SimioPortalWebAPIHelper.StartTimeSelection.ToLower() == "none" &&
                         SimioPortalWebAPIHelper.SpecificStartingTime > DateTime.MinValue)
                     {
                         Console.WriteLine("Set Specific Starting Time and Experiment Run Length Days....Specific Starting Start:" + SimioPortalWebAPIHelper.SpecificStartingTime.ToString("yyyy-MM-ddTHH:mm:ss") + "|Run Length Days: " + SimioPortalWebAPIHelper.RunLengthDays.ToString());
-                        SimioPortalWebAPIHelper.setExperimentRunScenarioSpecificStartingTimeRunLengthDays(experimentRunId);
+                        SimioPortalWebAPIHelper.setExperimentRunScenarioSpecificStartingTimeRunLengthDays(parentExperimentRunId);
                     }
 
                     Console.WriteLine("Start Experiment Run For Schedule");
-                    SimioPortalWebAPIHelper.startExpimentRun(experimentRunId, experimentId, true);
+                    SimioPortalWebAPIHelper.startExpimentRun(parentExperimentRunId, experimentId, true);
 
-                    experimentRunId = SimioPortalWebAPIHelper.findExperimentResults(experimentId, true);
-                    Console.WriteLine("ExperimentRunId:" + experimentRunId.ToString());
+                    SimioPortalWebAPIHelper.findExperimentRunResults(parentExperimentRunId, true);
+                    Console.WriteLine("Successful Results");
                 }
 
                 if (SimioPortalWebAPIHelper.ExportAllTablesAndLogs)
                 {
                     var correlationId = Guid.NewGuid().ToString();
                     Console.WriteLine("Export All Experiment Run Scenario Table And Log Data....CorrelationId:" + correlationId);
-                    SimioPortalWebAPIHelper.exportAllExperimentRunScenarioTableAndLogData(experimentRunId, correlationId);
-                    SimioPortalWebAPIHelper.getExperimentRunScenarioTableExports(experimentRunId, correlationId);
+                    SimioPortalWebAPIHelper.exportAllExperimentRunScenarioTableAndLogData(parentExperimentRunId, correlationId);
+                    SimioPortalWebAPIHelper.getExperimentRunScenarioTableExports(parentExperimentRunId, correlationId);
                     Console.WriteLine("Get Table Exports Status Success");
                 }
 
                 if (SimioPortalWebAPIHelper.PublishScheduleRun)
                 {
                     Console.WriteLine("Publish Schedule Results");
-                    SimioPortalWebAPIHelper.publishResults(experimentRunId, true);
+                    SimioPortalWebAPIHelper.publishResults(parentExperimentRunId, true);
+                }
+
+                if (SimioPortalWebAPIHelper.DeletePlanExperimentRunAfterSuccessfulRun)
+                {
+                    Console.WriteLine("Delete Plan Experiment Runs");
+                    SimioPortalWebAPIHelper.deletePlan(parentExperimentRunId);
                 }
             }
 
@@ -433,7 +440,7 @@ namespace RunSimioPortalExpConsole
                     SimioPortalWebAPIHelper.startExpimentRun(experimentRunId, experimentId, false);
                 }
 
-                experimentRunId = SimioPortalWebAPIHelper.findExperimentResults(experimentId, false);
+                SimioPortalWebAPIHelper.findExperimentRunResults(experimentRunId, false);
 
                 if (SimioPortalWebAPIHelper.PublishExperimentRun)
                 {
