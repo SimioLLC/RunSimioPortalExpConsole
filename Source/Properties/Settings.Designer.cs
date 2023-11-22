@@ -384,7 +384,7 @@ namespace RunSimioPortalExpConsole.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool RecreatePlanExperimentRunIfFound {
             get {
                 return ((bool)(this["RecreatePlanExperimentRunIfFound"]));
@@ -403,6 +403,18 @@ namespace RunSimioPortalExpConsole.Properties {
             }
             set {
                 this["DeletePlanExperimentRunAfterSuccessfulRun"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DataConnectorConfigurationsJSON {
+            get {
+                return ((string)(this["DataConnectorConfigurationsJSON"]));
+            }
+            set {
+                this["DataConnectorConfigurationsJSON"] = value;
             }
         }
     }

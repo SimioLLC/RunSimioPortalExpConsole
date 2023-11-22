@@ -217,6 +217,12 @@ namespace RunSimioPortalExpConsole
                                 SimioPortalWebAPIHelper.RecreatePlanExperimentRunIfFound = Convert.ToBoolean(args[arrayIdx + 1]);
                             }
                             break;
+                        case "-dcc":
+                            if (arrayIdx < args.Length - 1)
+                            {
+                                SimioPortalWebAPIHelper.DataConnectorConfigurationsJSON = args[arrayIdx + 1];
+                            }
+                            break;
                         case "-?":
                             System.Console.WriteLine("-url = Portal url  (default = " + SimioPortalWebAPIHelper.Url + ")");
                             System.Console.WriteLine("-pat = Personal Access Token  (default = " + SimioPortalWebAPIHelper.PersonalAccessToken.ToString() + ")");
@@ -241,6 +247,7 @@ namespace RunSimioPortalExpConsole
                             System.Console.WriteLine("-pen = Publish Experiment Run Name  (default = " + SimioPortalWebAPIHelper.PublishExperimentRunName + ")");
                             System.Console.WriteLine("-ped = Publish Experiment Run Description  (default = " + SimioPortalWebAPIHelper.PublishExperimentRunDescription + ")");
                             System.Console.WriteLine("-rld = Run Length Days (Scheduling Only) (default = " + SimioPortalWebAPIHelper.RunLengthDays.ToString() + ")");
+                            System.Console.WriteLine("-dcc = Data Connector Configurations JSON (default = " + SimioPortalWebAPIHelper.DataConnectorConfigurationsJSON.ToString() + ")");
                             System.Console.WriteLine("-iat = Import All Tables (Scheduling Only)  (default = " + SimioPortalWebAPIHelper.ImportAllTables.ToString() + ")");
                             System.Console.WriteLine("-eat = Export All Tables And Logs (Scheduling Only)  (default = " + SimioPortalWebAPIHelper.ExportAllTablesAndLogs.ToString() + ")");
                             System.Console.WriteLine("-sts = Start Time Selection (Scheduling Only)  (default = " + SimioPortalWebAPIHelper.StartTimeSelection + ")");
@@ -362,6 +369,12 @@ namespace RunSimioPortalExpConsole
                         Console.WriteLine("Set Experiment Run Scenario Control Value For Name=Value : " + p.Key + "=" + p.Value);
                         SimioPortalWebAPIHelper.setExperimentRunScenarioControlValue(parentExperimentRunId, p.Key, p.Value);
                     }
+                }
+
+                if (SimioPortalWebAPIHelper.DataConnectorConfigurationsJSON.Length > 0)
+                {
+                    Console.WriteLine("Set Experiment Run Scenario Current Data Connector Configurations For ExperimentRunId : " + parentExperimentRunId.ToString());
+                    SimioPortalWebAPIHelper.SetExperimentRunScenarioCurrentDataConnectorConfigurations(parentExperimentRunId);
                 }
 
                 if (SimioPortalWebAPIHelper.RunSchedule)

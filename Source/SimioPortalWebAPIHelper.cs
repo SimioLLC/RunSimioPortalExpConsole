@@ -53,6 +53,7 @@ namespace RunSimioPortalExpConsole
         internal static bool CreatePlanExperimentRunIfNotFound = Properties.Settings.Default.CreatePlanExperimentRunIfNotFound;
         internal static bool RecreatePlanExperimentRunIfFound = Properties.Settings.Default.RecreatePlanExperimentRunIfFound;
         internal static bool DeletePlanExperimentRunAfterSuccessfulRun = Properties.Settings.Default.DeletePlanExperimentRunAfterSuccessfulRun;
+        internal static string DataConnectorConfigurationsJSON = Properties.Settings.Default.DataConnectorConfigurationsJSON;
 
         internal static void setCredentials()
         {
@@ -213,7 +214,6 @@ namespace RunSimioPortalExpConsole
             }
             return returnInt;
         }
-
 
         internal static Int32 findModelId()
         {
@@ -871,6 +871,45 @@ namespace RunSimioPortalExpConsole
                 }
             }
         }
+
+        internal static void SetExperimentRunScenarioCurrentDataConnectorConfigurations(Int32 existingExperimentRuntId)
+        {
+            checkAndObtainBearerToken();
+            var client = new RestClient(Uri + "/api/Command");
+            client.Timeout = -1;
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("Content-Type", "multipart/form-data");
+            request.AddHeader("Authorization", "Bearer " + Token);
+            if (String.IsNullOrWhiteSpace(AuthenticationType) == false && AuthenticationType.ToLower() != "none")
+            {
+                if (UseDefaultCredentials)
+                {
+                    request.UseDefaultCredentials = true;
+                }
+                else
+                {
+                    client.Authenticator = new RestSharp.Authenticators.NtlmAuthenticator(Credentials);
+                }
+            }
+
+            request.AlwaysMultipartFormData = true;
+            request.AddParameter("Type", "SetExperimentRunScenarioCurrentDataConnectorConfigurations");
+            request.AddParameter("Command", "{\"ExperimentRunId\": " + existingExperimentRuntId.ToString() + ", \"ScenarioCurrentDataConnectors\": " + DataConnectorConfigurationsJSON + "}");
+            IRestResponse response = client.Execute(request);
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                if (response.ErrorMessage != null) throw new Exception(response.StatusDescription + " : " + response.ErrorMessage);
+                else throw new Exception(response.StatusDescription + " : " + response.Content);
+            }
+            var xmlDoc = responseToXML(response.Content);
+            var successedNode = xmlDoc.SelectSingleNode("data/Succeeded");
+            if (successedNode.InnerText.ToLower() == "false")
+            {
+                var failureMessageNode = xmlDoc.SelectSingleNode("data/FailureMessage");
+                throw new Exception(failureMessageNode.InnerText);
+            }
+        }
+
 
         internal static XmlDocument responseToXML(string responseContent)
         {
