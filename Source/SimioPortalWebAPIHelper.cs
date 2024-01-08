@@ -252,8 +252,9 @@ namespace RunSimioPortalExpConsole
                 if (ProjectName == projectNode[0].InnerText)
                 {
                     XmlNodeList idNode = ((XmlElement)itemNodes).GetElementsByTagName("Id");
-                    returnInt = Convert.ToInt32(idNode[0].InnerXml);
-                    break;
+                    Int32 tempReturnInt = Convert.ToInt32(idNode[0].InnerXml);
+                    if (tempReturnInt > returnInt)
+                        returnInt = tempReturnInt;
                 }
             }
             return returnInt;
